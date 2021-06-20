@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Todo-MVC</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="top-bar">
+      <div class="toggle">
+        <div class="toggle-item">
+          <p class="toggle-left">11</p>
+          <span>left</span>
+        </div>
+        <div class="toggle-item">
+          <p class="toggle-done">12</p>
+          <span>done</span>
+        </div>
+        <div class="toggle-item">
+          <p class="toggle-total">11</p>
+          <span>total</span>
+        </div>
+      </div>
+      <div class="input-bar">
+        <input
+          class="text-input"
+          type="text"
+          placeholder="What needs to be done?"
+        />
+        <input class="date-selector" type="date" />
+        <span class="material-icons btn">add</span>
+      </div>
+    </div>
+
+    <div class="add-task-bar">
+      <div class="add-taskset-btn">
+        <span class="material-icons">add</span>
+        <span class="text">add taskset </span>
+      </div>
+    </div>
+
+    <div class="taskset-list">
+      <div class="taskset-item">
+        <span class="material-icons top-icon">class</span>
+        <p class="taskset-name">Todo list name</p>
+        <p class="task-cnt">24</p>
+        <span class="icon">tasks</span>
+      </div>
+      <div class="taskset-item">
+        <span class="material-icons top-icon">class</span>
+        <p class="taskset-name">Todo list name</p>
+        <p class="task-cnt">24</p>
+        <span class="icon">tasks</span>
+      </div>
+      <div class="taskset-item">
+        <span class="material-icons top-icon">class</span>
+        <p class="taskset-name">Todo list name</p>
+        <p class="task-cnt">24</p>
+        <span class="icon">tasks</span>
+      </div>
+    </div>
+    <!-- todolist 和 完成的时间 -->
+    <div class="todo-container">
+      <div class="time-bar">
+        <span class="date">2020/02/02 周三</span>
+        <div class="left-day-cnt">
+          <span class="num">23</span>
+          <span class="text">d left</span>
+        </div>
+      </div>
+
+      <div class="todo-item completed">
+        <div class="icon-container"><div class="finish-icon"></div></div>
+        <p>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit.
+          Distinctioipsam ex voluptatum numquam sit. Nihil odio sapiente dolor
+          error quasi dolorem, totam assumenda laudantium? Non modi eius
+          recusandae assumenda beatae.
+        </p>
+      </div>
+      <div class="todo-item">
+        <div class="icon-container"><div class="finish-icon"></div></div>
+        <p>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat quis
+          odit beatae voluptatibus distinctio facere repellat veniam, nesciunt
+          voluptatem quidem, velit doloremque? Suscipit, voluptatem numquam
+          voluptatibus quisquam hic officiis doloribus?
+        </p>
+      </div>
+      <div class="todo-item">
+        <div class="icon-container"><div class="finish-icon"></div></div>
+        <p>asdsad</p>
+      </div>
+      <div class="todo-item">
+        <div class="icon-container"><div class="finish-icon"></div></div>
+        <p>asdsad</p>
+      </div>
+    </div>
+  </body>
+</html>

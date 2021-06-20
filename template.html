@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>TodoMvc</title>
+  <style>
+    .list-item {
+      position: relative;
+    }
+
+    .list-item:hover {
+      background-color: #eee;
+    }
+
+    .list-item-content {
+      height: 40px;
+      line-height: 40px;
+      padding-left: 10px;
+    }
+
+    .list-item-content.c {
+      color: gray;
+      text-decoration: line-through;
+    }
+
+    .list-item-close,
+    .list-item-update {
+      display: none;
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 40px;
+      width: 40px;
+      line-height: 40px;
+      text-align: center;
+      border-width: 0;
+      cursor: pointer;
+      background-color: red;
+      color: white;
+    }
+
+    .list-item-update {
+      right: 40px;
+      background-color: blue;
+    }
+
+    .list-item:hover .list-item-close,
+    .list-item:hover .list-item-update {
+      display: block;
+    }
+  </style>
+  </script>
+</head>
+
+<body>
+  <h1>TodoMvc</h1>
+  <input id="todoInput" type="text" placeholder="to do something" autofocus>
+  <button id="addButton" type="button">Add Todo Item</button>
+  <div id="listDiv"></div>
+  <div id="activeDiv"></div>
+
+  <script>
+    function $(id) {
+      return document.getElementById(id);
+    }
+
+    var activeAmount = 0;
+
+    function updateActive(offset) {
+      activeAmount += offset;
+      var activeDiv = $('activeDiv');
+      activeDiv.innerHTML = activeAmount + ' items left';
+    }
+
+    function addTodo() {
+      var todoInput = $('todoInput');
+      var message = todoInput.value;
+      var listDiv = $('listDiv');
+      if (message == '') {
+        console.warn('message is empty');
+        return;
+      }
+
+      var itemDiv = document.createElement('div');
+      itemDiv.className = 'list-item';
+      listDiv.insertBefore(itemDiv, listDiv.firstChild);
+
+      var itemContentDiv = document.createElement('div');
+      itemContentDiv.className = 'list-item-content';
+      itemContentDiv.innerHTML = message;
+      itemDiv.appendChild(itemContentDiv);
+
+      var itemCloseButton = document.createElement('button');
+      itemCloseButton.className = 'list-item-close';
+      itemCloseButton.innerHTML = 'X';
+      itemDiv.appendChild(itemCloseButton);
+      itemCloseButton.addEventListener('click', function () {
+        listDiv.removeChild(itemDiv);
+        updateActive(-1);
+      });
+
+      var itemUpdateButton = document.createElement('button');
+      itemUpdateButton.className = 'list-item-update';
+      itemUpdateButton.innerHTML = 'U';
+      itemDiv.appendChild(itemUpdateButton);
+      itemUpdateButton.addEventListener('click', function () {
+        if (itemContentDiv.classList.contains('c')) {
+          itemContentDiv.classList.remove('c');
+          updateActive(+1);
+        }
+        else {
+          itemContentDiv.classList.add('c');
+          updateActive(-1);
+        }
+        console.log('update');
+        // updateActive(-1);
+      });
+
+      todoInput.value = '';
+      updateActive(+1); // +1 === 1
+    }
+
+    $('addButton').addEventListener('click', addTodo);
+    $('todoInput').addEventListener('keyup', function (event) {
+      if (event.keyCode != 0xd) return;
+      addTodo();
+    });
+
+  </script>
+</body>
+
+</html>
