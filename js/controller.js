@@ -10,6 +10,11 @@ export default class Controller {
     this.view = view;
     this.view.bindAddNewTask(this.addNewTask);
   }
+  toggleItem() {
+    (id) => {
+      this.toggleItemCompleted(id);
+    };
+  }
 
   addNewTask() {}
 }

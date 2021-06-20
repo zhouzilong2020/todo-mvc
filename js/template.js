@@ -35,17 +35,17 @@ export default class Template {
 
   /**
    * add a new day bar to the list
-   * @param {Task} task
+   * @param {Todo} Todo
    * @returns
    */
-  Task(task) {
+  Todo(todo) {
     return `<div data-id="${
-      task.id
-    }"  data-due="${task.due.LeftDay()}" class="todo-item ${
-      task.completed ? " completed" : ""
+      todo.id
+    }"  data-due="${todo.due.LeftDay()}" class="todo-item ${
+      todo.completed ? " completed" : ""
     }">
   <div class="icon-container"><div class="finish-icon"></div></div>
-  <p>${task.mes}</p>
+  <p>${todo.mes}</p>
 </div>`;
   }
 }

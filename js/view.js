@@ -47,7 +47,7 @@ export default class View {
   init() {
     console.log("view init");
 
-    this.bindToggleItem((id) => {
+    this.bindToggleTodoItem((id) => {
       this.toggleItemCompleted(id);
     });
 
@@ -63,7 +63,7 @@ export default class View {
         }
       }
       console.log(changeVisibilityIdList);
-      this.setItemVisibility(changeVisibilityIdList);
+      this.setTodoItemVisibility(changeVisibilityIdList);
     });
     this.bindToggleTaskset((tasksetId) => {
       this.toggleTasksetActiveness(tasksetId);
@@ -73,7 +73,7 @@ export default class View {
     });
 
     // TODO 怎么存储？
-    this.bindAddNewTask(() => {});
+    this.bindAddNewTodo(() => {});
 
     // 如何添加截止日期？
     // const date = this.$inputBar.querySelector(".date-selector");
@@ -117,11 +117,11 @@ export default class View {
   }
 
   /**
-   * TODO 绑定新添加一个task
+   * TODO 绑定新添加一个todo
    * @param {function} handler handle function
    * @param {!boolean} verbose 打印事件冒泡和捕获信息
    */
-  bindAddNewTask(handler, verbose) {
+  bindAddNewTodo(handler, verbose) {
     $on(
       this.$inputBar.querySelector(".text-input"),
       "keyup",
@@ -129,7 +129,7 @@ export default class View {
         if (event.code == "Enter") {
           // console.log("enter");
           const date = this.$inputBar.querySelector(".date-selector");
-          
+
           // console.log(date);
           date.click();
           // handler(_itemId(target));
@@ -149,11 +149,11 @@ export default class View {
   }
 
   /**
-   * 绑定toggle task
+   * 绑定toggle todo
    * @param {function} handler handle function
    * @param {!boolean} verbose 打印事件冒泡和捕获信息
    */
-  bindToggleItem(handler, verbose) {
+  bindToggleTodoItem(handler, verbose) {
     $delegate(
       this.$todoContainer,
       [".todo-item .finish-icon", ".todo-item", ".todo-item p"],
@@ -226,7 +226,7 @@ export default class View {
    *
    * @param {HTMLElement} eleList
    */
-  setItemVisibility(eleList) {
+  setTodoItemVisibility(eleList) {
     let i = eleList.length;
     while (i--) {
       if (eleList[i].classList.contains("hide")) {
@@ -285,7 +285,7 @@ export default class View {
         if (preVal.due.getDate() !== curVal.due.getDate()) {
           this.$todoContainer.innerHTML += this.template.TimeBar(curVal.due);
         }
-        this.$todoContainer.innerHTML += this.template.Task(curVal);
+        this.$todoContainer.innerHTML += this.template.Todo(curVal);
         return curVal;
       },
       { due: new Date(0) }

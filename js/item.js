@@ -1,22 +1,22 @@
 /**
- * @typedef {!{id: number, completed: boolean, name: string, due: Date, tasksetId:number}}
+ * @typedef {!{id: number, completed: boolean, mes: string, due: Date,hide:boolean, tasksetId:number}}
  */
- var Task;
+var Todo;
 
 /**
- * @typedef {!{id: number,  name: string, leftCnt: number}}
+ * @typedef {!{id: number,  name: string, active: number, todoList:TodoList}}
  */
- var Taskset;
+var Taskset;
 
 /**
- * @typedef {!Array<Item>}
+ * @typedef {!Array<Todo>}
  */
- var TaskList;
+var TodoList;
 
 /**
  * @typedef {!Array<Taskset>}
  */
- var TasksetList;
+var TasksetList;
 
 /**
  * Enum containing a known-empty record type, matching only empty records unlike Object.
@@ -32,21 +32,21 @@ const Empty = {
  *
  * @typedef {Empty}
  */
-  var EmptyItemQuery;
+var EmptyItemQuery;
 
 /**
  * Reference to the only EmptyItemQuery instance.
  *
  * @type {EmptyItemQuery}
  */
-  const emptyItemQuery = Empty.Record;
+const emptyItemQuery = Empty.Record;
 
 /**
- * @typedef {!({id: number}|{completed: boolean}|EmptyItemQuery)}
+ * @typedef {!({id: number}|{completed: boolean}|{hide: boolean}|{tasksetId: number}|EmptyItemQuery)}
  */
-  var ItemQuery;
+var ItemQuery;
 
 /**
- * @typedef {!({id: number, title: string}|{id: number, completed: boolean})}
+ * @typedef {!({id: number, mes: string}|{id: number, completed: boolean}|{id: number, hide: boolean}|{id: number, task: boolean})}
  */
-  var ItemUpdate;
+var ItemUpdate;
