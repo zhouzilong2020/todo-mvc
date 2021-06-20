@@ -1,22 +1,22 @@
 /**
  * @typedef {!{id: number, completed: boolean, mes: string, due: Date,hide:boolean, tasksetId:number}}
  */
-var Todo;
+export var Todo;
 
 /**
  * @typedef {!{id: number,  name: string, active: number, todoList:TodoList}}
  */
-var Taskset;
+export var Taskset;
 
 /**
  * @typedef {!Array<Todo>}
  */
-var TodoList;
+export var TodoList;
 
 /**
  * @typedef {!Array<Taskset>}
  */
-var TasksetList;
+export var TasksetList;
 
 /**
  * Enum containing a known-empty record type, matching only empty records unlike Object.
@@ -32,21 +32,21 @@ const Empty = {
  *
  * @typedef {Empty}
  */
-var EmptyItemQuery;
+ export var EmptyItemQuery;
 
 /**
  * Reference to the only EmptyItemQuery instance.
  *
  * @type {EmptyItemQuery}
  */
-const emptyItemQuery = Empty.Record;
+export const emptyItemQuery = Empty.Record;
 
 /**
  * @typedef {!({id: number}|{completed: boolean}|{hide: boolean}|{tasksetId: number}|EmptyItemQuery)}
  */
-var ItemQuery;
+export var ItemQuery;
 
 /**
  * @typedef {!({id: number, mes: string}|{id: number, completed: boolean}|{id: number, hide: boolean}|{id: number, task: boolean})}
  */
-var ItemUpdate;
+export var ItemUpdate;

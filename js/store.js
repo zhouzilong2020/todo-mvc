@@ -70,12 +70,13 @@ export default class Store {
    *	 // data shall contain items whose completed properties are true
    * })
    */
-  findTodo(query, callback) {
+  find(query, callback) {
     const tasksetList = this.getLocalStorage();
     const todoList = _todoList(tasksetList);
     let k;
     callback(
       todoList.filter((todo) => {
+        // 如果传入的是emptyQuery，则不会进入for，默认筛选全部的todo
         for (k in query) {
           if (query[k] !== todo[k]) {
             return false;
@@ -87,15 +88,14 @@ export default class Store {
   }
 
   /**
-   * Update an item in the Store.
+   * 更新一条todo
    *
    * @param {ItemUpdate} update Record with an id and a property to update
    * @param {function()} [callback] Called when partialRecord is applied
    */
-  updateTodo(update, callback) {
+  update(update, callback) {
     const id = update.id;
     const tasksetList = this.getLocalStorage();
-    const todoList = _todoList(tasksetList);
     // taskset被变换的todo
     let tasksetChangedTodo = null;
 
@@ -109,8 +109,9 @@ export default class Store {
       let j = todoList.length;
       while (j--) {
         if (todoList[j].id === id) {
+          // 记录需要更新的todo
           tasksetChangedTodo = todoList[j];
-          // 如果该todo任务集更换了，需要从原taskset删除，插入到新的taskset中
+          // 如果需要从原taskset删除，插入到新的taskset中
           if (update.hasOwnProperty("tasksetId")) {
             todoList.splice(j, 1);
           }
@@ -145,12 +146,12 @@ export default class Store {
   }
 
   /**
-   * Insert an todo into the Store.
+   * 插入一条todo
    *
    * @param {Todo} todo Item to insert
    * @param {function()} [callback] Called when item is inserted
    */
-  insertTodo(todo, callback) {
+  insert(todo, callback) {
     const tasksetList = this.getLocalStorage();
     let i = tasksetList.length;
     while (i--) {
@@ -166,44 +167,49 @@ export default class Store {
   }
 
   /**
-   * Remove items from the Store based on a query.
+   * 删除一个任务，这不一定是按照id，比如删除所有已完成
    *
    * @param {ItemQuery} query Query matching the items to remove
    * @param {function(TasksetList)|function()} [callback] Called when records matching query are removed
    */
-  removeTodo(query, callback) {
+  remove(query, callback) {
+    const tasksetList = this.getLocalStorage();
+    let i = tasksetList.length;
     let k;
-
-    const todos = this.getLocalStorage().filter((todo) => {
-      for (k in query) {
-        if (query[k] !== todo[k]) {
-          return true;
+    while (i--) {
+      const todoList = tasksetList[i];
+      let j = todoList.length;
+      // 遍历当前任务集中的todolist
+      while (j--) {
+        for (k in query) {
+          if (query[k] === todoList[j][k]) {
+            // 更新todoList
+            todoList.splice(j, 1);
+          }
         }
       }
-      return false;
-    });
-
-    this.setLocalStorage(todos);
+    }
+    this.setLocalStorage(tasksetList);
 
     if (callback) {
-      callback(todos);
+      callback(tasksetList);
     }
   }
 
   /**
    * Count total, active, and completed todos.
    *
-   * @param {function(number, number, number)} callback Called when the count is completed
+   * @param {function(number, number, number)} callback total, left, completed
    */
   count(callback) {
-    this.find(emptyItemQuery, (data) => {
-      const total = data.length;
+    this.find(emptyItemQuery, (allTodo) => {
+      const total = allTodo.length;
 
       let i = total;
       let completed = 0;
 
       while (i--) {
-        completed += data[i].completed;
+        completed += allTodo[i].completed;
       }
       callback(total, total - completed, completed);
     });
