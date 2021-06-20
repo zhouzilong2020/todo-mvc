@@ -129,6 +129,7 @@ export default class View {
         if (event.code == "Enter") {
           // console.log("enter");
           const date = this.$inputBar.querySelector(".date-selector");
+          
           // console.log(date);
           date.click();
           // handler(_itemId(target));
