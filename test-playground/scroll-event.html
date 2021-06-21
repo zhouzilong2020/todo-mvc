@@ -21,26 +21,34 @@
           class="btn-group"
           style="
             transition: 0.4s;
-            display: block;
+            display: flex;
             border-radius: 5px;
             position: absolute;
             top: 0px;
             right: 0px;
             width: 0px;
             height: 100%;
+
+            justify-content: center;
+            align-items: center;
             background-color: red;
           "
-        ></div>
+        >
+          <span class="material-icons" style="opacity: 0; transition: 0.2s"
+            >delete</span
+          >
+        </div>
       </div>
     </div>
 
     <script>
       const div = document.querySelector(".todo-container");
       const btn = document.querySelector(".btn-group");
+      const btnIcon = btn.querySelector("span");
       const content = document.querySelector(".todo-item");
 
       var startX;
-      const maxWidth = "100";
+      const maxWidth = "80";
 
       div.addEventListener("touchstart", (event) => {
         event.stopPropagation();
@@ -60,6 +68,12 @@
         );
 
         content.style.left = `${-diffX}px`;
+        if (diffX > maxWidth * 0.618) {
+          btnIcon.style.opacity = "1";
+        } else {
+          btnIcon.style.opacity = "0";
+        }
+
         btn.style.right = `${-diffX}px`;
         btn.style.width = `${diffX}px`;
 
@@ -74,8 +88,10 @@
         );
         if (diffX > maxWidth * 0.618) {
           diffX = maxWidth;
+          btnIcon.style.opacity = "1";
         } else {
           diffX = 0;
+          btnIcon.style.opacity = "0";
         }
 
         content.style.left = `${-diffX}px`;
