@@ -12,7 +12,7 @@ const _todoList = (tasksetList) => {
   const todoList = [];
   let i = tasksetList.length;
   while (i--) {
-    todoList.push(tasksetList[i].todoList);
+    todoList.push(...tasksetList[i].todoList);
   }
   return todoList;
 };
@@ -53,9 +53,40 @@ export default class Store {
         JSON.stringify((liveTestsetList = testsetList))
       );
     };
-
     if (callback) {
       callback();
+    }
+  }
+
+  /**
+   *  初始化localstorage
+   * @param {function} callback
+   */
+  init(callback) {
+    if (this.getLocalStorage().length === 0) {
+      this.setLocalStorage([
+        {
+          id: 1,
+          name: "todo-list1",
+          active: true,
+          todoList: [],
+        },
+        {
+          id: 2,
+          name: "todo-list2",
+          active: false,
+          todoList: [],
+        },
+        {
+          id: 3,
+          name: "todo-list3",
+          active: false,
+          todoList: [],
+        },
+      ]);
+    }
+    if (callback) {
+      callback(this.getLocalStorage());
     }
   }
 
@@ -156,11 +187,13 @@ export default class Store {
     let i = tasksetList.length;
     while (i--) {
       if (tasksetList[i].id == todo.tasksetId) {
+        console.log(tasksetList[i]);
         tasksetList[i].todoList.push(todo);
+        console.log(tasksetList[i]);
+        break;
       }
     }
     this.setLocalStorage(tasksetList);
-
     if (callback) {
       callback();
     }

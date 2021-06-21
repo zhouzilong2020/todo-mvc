@@ -1,5 +1,6 @@
 import { qs, $delegate, $on } from "./helper.js";
 import "./dateUtils.js";
+import { TodoList } from "./item.js";
 
 // toggle finish 的父节点为icon container,该节点的父节点有该list的id
 const _itemId = (element) =>
@@ -18,9 +19,16 @@ const _toggleId = (element) =>
   element.parentNode.dataset.id ||
   element.parentNode.parentNode.dataset.id;
 
-const ENTER_KEY = 13;
-const ESCAPE_KEY = 27;
-
+const _activeTasksetId = (eleList) => {
+  let i = eleList.length;
+  const result = [];
+  while (i--) {
+    if (eleList[i].classList.contains("active")) {
+      result.push(eleList[i].dataset.id);
+    }
+  }
+  return result;
+};
 export default class View {
   /**
    * @param {!Template} template 模版生成
@@ -37,16 +45,17 @@ export default class View {
     this.$totalCnt = qs(".top-bar .toggle .toggle-item .toggle-total");
 
     this.$inputBar = qs(".top-bar .input-bar");
+    this.$input = qs(".top-bar .input-bar .text-input");
 
     this.$todoContainer = qs(".todo-container");
 
     this.$tasksetList = qs(".taskset-list");
+
+    var hasRenderedTaskset = false;
   }
 
   // 初始化绑定操作
   init() {
-    console.log("view init");
-
     this.bindToggleTodoItem((id) => {
       this.toggleItemCompleted(id);
     });
@@ -122,30 +131,24 @@ export default class View {
    * @param {!boolean} verbose 打印事件冒泡和捕获信息
    */
   bindAddNewTodo(handler, verbose) {
-    $on(
-      this.$inputBar.querySelector(".text-input"),
-      "keyup",
-      (event) => {
-        if (event.code == "Enter") {
-          // console.log("enter");
-          const date = this.$inputBar.querySelector(".date-selector");
+    const eventHandler = (event) => {
+      if (event.code == "Enter") {
+        const mes = this.$input.value;
+        const curTaskset = _activeTasksetId(this.$tasksetList.children);
 
-          // console.log(date);
-          date.click();
-          // handler(_itemId(target));
+        if (curTaskset.length > 1 || curTaskset.length <= 0) {
+          // 仅能有一个在这里！
+          alert(
+            "A task can only be added to one taskset, please toggle one taskset and try again!"
+          );
+          return;
+        } else if (curTaskset.length === 1) {
+          handler(mes, curTaskset[0]);
         }
-      },
-      true
-    );
-    $on(
-      this.$inputBar.querySelector("span"),
-      "click",
-      (event) => {
-        // console.log("event");
-        // handler(_itemId(target));
-      },
-      true
-    );
+      }
+    };
+    $on(this.$inputBar.querySelector("span"), "click", eventHandler, true);
+    $on(this.$input, "keyup", eventHandler, true);
   }
 
   /**
@@ -254,6 +257,62 @@ export default class View {
     }
   }
 
+  clearNewTodo() {
+    this.$input.value = "";
+  }
+
+  /**
+   * 根据传入的TodoList 渲染页面
+   *
+   * @param {TodoList} todoList
+   */
+  renderItem(todoList) {
+    // TODO 增量式更新
+    this.$todoContainer.innerHTML = "";
+    console.log(todoList);
+    // 总任务数量统计信息
+    var completedCnt = 0;
+    var totalCnt = 0;
+    // TODO 按照不同顺序排列
+    // TODO 按照优先级排列
+    todoList.sort((a, b) => {
+      return a.due - b.due;
+    });
+
+    todoList.reduce(
+      (pre, cur) => {
+        // 统计当前todolist的left, completed, total
+        totalCnt++;
+        if (cur.completed === true) {
+          completedCnt++;
+        }
+        // 反序列化
+        cur.due = new Date(cur.due);
+        if (pre.due.getDate() !== cur.due.getDate()) {
+          this.$todoContainer.innerHTML += this.template.TimeBar(cur.due);
+        }
+        this.$todoContainer.innerHTML += this.template.Todo(cur);
+        return cur;
+      },
+      { due: new Date(0) }
+    );
+    this.$leftCnt.innerHTML = totalCnt - completedCnt;
+    this.$totalCnt.innerHTML = totalCnt;
+    this.$doneCnt.innerHTML = completedCnt;
+  }
+
+  renderTaskset(tasksetList) {
+    tasksetList.reduce((pre, cur) => {
+      cur.leftCnt = 0;
+      // 统计每一个任务集合中未完成的数量
+      cur.todoList.forEach((element) => {
+        if (!!!element.completed) {
+          cur.leftCnt++;
+        }
+      });
+      this.$tasksetList.innerHTML += this.template.Taskset(cur);
+    }, 0);
+  }
   /**
    * 数据驱动更新函数！
    */

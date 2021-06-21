@@ -32,7 +32,7 @@ const Empty = {
  *
  * @typedef {Empty}
  */
- export var EmptyItemQuery;
+export var EmptyItemQuery;
 
 /**
  * Reference to the only EmptyItemQuery instance.

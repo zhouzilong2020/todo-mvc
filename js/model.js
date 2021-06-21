@@ -52,7 +52,7 @@ window.model = {
     // ],
     taskset: [
       {
-        id: 123,
+        id: 1,
         name: "todo-list1",
         active: true,
         todoList: [
@@ -75,9 +75,9 @@ window.model = {
         ],
       },
       {
-        id: 124,
+        id: 2,
         name: "todo-list2",
-        active: true,
+        active: false,
         todoList: [
           {
             id: 1624169450206,
@@ -98,9 +98,9 @@ window.model = {
         ],
       },
       {
-        id: 125,
+        id: 3,
         name: "todo-list3",
-        active: true,
+        active: false,
         todoList: [
           {
             id: 1524169470206,
