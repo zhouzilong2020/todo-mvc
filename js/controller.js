@@ -85,7 +85,6 @@ export default class Controller {
    */
   toggleItemCompleted(id, completed) {
     this.store.update({ id, completed }, () => {
-      this.view.toggleItemCompleted(id);
       this._filter();
     });
   }

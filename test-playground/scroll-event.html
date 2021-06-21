@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div
+      data-id="1"
+      id="container"
+      style="
+        background-color: red;
+        width: 80%;
+        height: 100px;
+        margin: 0 auto;
+        position: relative;
+        overflow: hidden;
+      "
+    >
+      <div
+        data-id="3"
+        style="
+          display: block;
+          background-color: black;
+          height: 100%;
+          position: absolute;
+        "
+      >
+        hghghghs
+      </div>
+      <div
+        data-id="2"
+        style="
+          display: block;
+          background-color: black;
+          height: 100%;
+          position: absolute;
+
+          right: 0;
+        "
+      ></div>
+    </div>
+
+    <script>
+      const div = document.querySelector("#container");
+      const btn = document.querySelector("div [data-id='2']");
+      const content = document.querySelector("div [data-id='3']");
+
+      var startX;
+      const maxWidth = "100";
+
+      div.addEventListener("touchstart", (event) => {
+        event.stopPropagation();
+        const id = event.target.dataset.id;
+        const touchStart = event.changedTouches[0];
+        startX = touchStart.clientX;
+        console.log([`id:${id}\n`, `startX:${startX}`].join(" "));
+      });
+
+      div.addEventListener("touchmove", (event) => {
+        event.stopPropagation();
+        let diffX = Math.max(
+          0,
+          Math.min(startX - event.changedTouches[0].clientX, maxWidth)
+        );
+
+        content.style.left = -diffX + "px";
+
+        const id = event.target.dataset.id;
+        btn.style.width = `${diffX}px`;
+      });
+
+      div.addEventListener("touchend", (event) => {
+        event.stopPropagation();
+        let diffX = Math.max(
+          0,
+          Math.min(startX - event.changedTouches[0].clientX, maxWidth)
+        );
+        if (diffX > maxWidth / 2) {
+          diffX = maxWidth;
+        }
+        const id = event.target.dataset.id;
+
+        btn.style.width = `${diffX}px`;
+        console.log([`id:${id}\n`, `diffX:${diffX}`].join(" "));
+      });
+    </script>
+  </body>
+</html>

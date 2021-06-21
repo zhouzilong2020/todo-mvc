@@ -156,10 +156,16 @@ export default class View {
   bindToggleItemComplete(handler, verbose) {
     $delegate(
       this.$todoContainer,
-      [".todo-item .finish-icon", ".todo-item", ".todo-item p"],
+      [
+        ".todo-item",
+        ".todo-item .finish-icon",
+        // ".todo-item .finish-icon::after",
+        ".todo-item p",
+      ],
       "click",
       ({ target }) => {
         // 当前complete状态取反为下一个状态
+        console.log(_itemId(target));
         handler(_itemId(target), !_complete(target));
       },
       true,
@@ -243,7 +249,9 @@ export default class View {
    * @param {!number} id Item ID
    */
   toggleItemCompleted(id) {
+    console.log("view", id);
     const listItem = this.$todoContainer.querySelector(`[data-id="${id}"]`);
+    console.log(listItem);
     if (!listItem) {
       return;
     }
@@ -304,7 +312,6 @@ export default class View {
   setTasksetStatistic(todoList) {
     const cnt = {};
     todoList.reduce((pre, cur) => {
-      console.log(cur);
       if (!!!cnt[cur.tasksetId]) {
         cnt[cur.tasksetId] = 1;
       } else {
@@ -312,7 +319,13 @@ export default class View {
       }
     }, cnt);
 
-    console.log(cnt);
+    // 重置顶部数字
+    const taskList = this.$tasksetList.children;
+    let i = taskList.length;
+    while (i--) {
+      taskList[i].querySelector(".task-cnt").innerText = 0;
+    }
+
     for (let k in cnt) {
       const $cnt = (this.$tasksetList.querySelector(
         `[data-id="${k}"] .task-cnt`
