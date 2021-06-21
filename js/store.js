@@ -8,6 +8,17 @@ import {
   emptyItemQuery,
 } from "./item.js";
 
+const _activeTodoList = (tasksetList) => {
+  const todoList = [];
+  let i = tasksetList.length;
+  while (i--) {
+    if (tasksetList[i].active) {
+      todoList.push(...tasksetList[i].todoList);
+    }
+  }
+  return todoList;
+};
+
 const _todoList = (tasksetList) => {
   const todoList = [];
   let i = tasksetList.length;
@@ -16,6 +27,7 @@ const _todoList = (tasksetList) => {
   }
   return todoList;
 };
+
 export default class Store {
   /**
    * @param {!string} name localstorage的数据库的key
@@ -92,7 +104,7 @@ export default class Store {
 
   /**
    * 从数据库中找到符合query条件的 todo 数据，并作为回掉函数的入参
-   *
+   * TODO 集合查询！
    * @param {ItemQuery} query query条件
    * @param {function(TodoList)} callback 回掉函数
    *
@@ -103,7 +115,7 @@ export default class Store {
    */
   find(query, callback) {
     const tasksetList = this.getLocalStorage();
-    const todoList = _todoList(tasksetList);
+    const todoList = _activeTodoList(tasksetList);
     let k;
     callback(
       todoList.filter((todo) => {
@@ -187,18 +199,14 @@ export default class Store {
     const tasksetList = this.getLocalStorage();
     let i = tasksetList.length;
     let k;
-
     while (i--) {
       if (tasksetList[i].id === id) {
         for (k in update) {
-          
           tasksetList[i][k] = update[k];
         }
-        console.log(tasksetList[i]);
         break;
       }
     }
-
     this.setLocalStorage(tasksetList);
     if (callback) {
       callback();
@@ -264,16 +272,14 @@ export default class Store {
    * @param {function(number, number, number)} callback total, left, completed
    */
   count(callback) {
-    this.find(emptyItemQuery, (allTodo) => {
-      const total = allTodo.length;
-
-      let i = total;
-      let completed = 0;
-
-      while (i--) {
-        completed += allTodo[i].completed;
-      }
-      callback(total, total - completed, completed);
-    });
+    const allTodo = _todoList(this.getLocalStorage());
+    const total = allTodo.length;
+    let i = total;
+    let completed = 0;
+    while (i--) {
+      completed += allTodo[i].completed;
+    }
+    console.log(completed);
+    callback(total, total - completed, completed);
   }
 }

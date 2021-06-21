@@ -11,8 +11,7 @@ export default class Controller {
     this.store = store;
     this.view = view;
 
-    this.activeTasksetId = [];
-    this.curToggleBtn = [];
+    this.toggleState = [];
 
     this.view.bindToggleItemComplete(this.toggleItemCompleted.bind(this));
     this.view.bindAddNewTodo(this.addItem.bind(this));
@@ -28,6 +27,7 @@ export default class Controller {
   toggleTaskset(id, active) {
     this.store.updateTaskset({ id, active }, () => {
       this.view.toggleTaskset(id);
+      this._filter();
     });
   }
 
@@ -87,13 +87,12 @@ export default class Controller {
    * TODO 增量式渲染
    */
   _filter() {
-    const route = this._activeRoute;
-
     // if (
     //   force ||
     //   this._lastActiveRoute !== "" ||
     //   this._lastActiveRoute !== route
     // ) {
     this.store.find(emptyItemQuery, this.view.renderItem.bind(this.view));
+    this.store.count(this.view.setStatistic.bind(this.view));
   }
 }

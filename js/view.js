@@ -272,22 +272,13 @@ export default class View {
   renderItem(todoList) {
     // TODO 增量式更新
     this.$todoContainer.innerHTML = "";
-    // 总任务数量统计信息
-    var completedCnt = 0;
-    var totalCnt = 0;
     // TODO 按照不同顺序排列
     // TODO 按照优先级排列
     todoList.sort((a, b) => {
       return a.due - b.due;
     });
-
     todoList.reduce(
       (pre, cur) => {
-        // 统计当前todolist的left, completed, total
-        totalCnt++;
-        if (cur.completed === true) {
-          completedCnt++;
-        }
         // 反序列化
         cur.due = new Date(cur.due);
         if (pre.due.getDate() !== cur.due.getDate()) {
@@ -298,9 +289,6 @@ export default class View {
       },
       { due: new Date(0) }
     );
-    this.$leftCnt.innerHTML = totalCnt - completedCnt;
-    this.$totalCnt.innerHTML = totalCnt;
-    this.$doneCnt.innerHTML = completedCnt;
   }
 
   /**
@@ -319,5 +307,11 @@ export default class View {
       });
       this.$tasksetList.innerHTML += this.template.Taskset(cur);
     }, 0);
+  }
+
+  setStatistic(total, left, done) {
+    this.$leftCnt.innerText = left;
+    this.$doneCnt.innerText = done;
+    this.$totalCnt.innerText = total;
   }
 }
