@@ -1,7 +1,7 @@
 import {
   Todo,
   TodoList,
-  Taskset,
+  TasksetUpdate,
   TasksetList,
   ItemQuery,
   ItemUpdate,
@@ -125,36 +125,36 @@ export default class Store {
    * @param {function()} [callback] Called when partialRecord is applied
    */
   update(update, callback) {
-    const id = update.id;
-    const tasksetList = this.getLocalStorage();
-    // taskset被变换的todo
-    let tasksetChangedTodo = null;
-
-    let i = tasksetList.length;
-    let k;
     // 是否已经被更新，当更新发生后就不需要再循环判断了
     let updated = false;
+    const id = update.id;
+    const tasksetList = this.getLocalStorage();
+    let toBeUpdated = null;
+    let i = tasksetList.length;
+    let k;
 
     while (i--) {
       const todoList = tasksetList[i].todoList;
       let j = todoList.length;
       while (j--) {
+        console.log(todoList[j].id, id);
         if (todoList[j].id === id) {
           // 记录需要更新的todo
-          tasksetChangedTodo = todoList[j];
+          toBeUpdated = todoList[j];
           // 如果需要从原taskset删除，插入到新的taskset中
           if (update.hasOwnProperty("tasksetId")) {
             todoList.splice(j, 1);
           }
           // 更新字段
           for (k in update) {
-            tasksetChangedTodo[k] = update[k];
+            // console.log("updated");
+            toBeUpdated[k] = update[k];
           }
           updated = true;
           break;
         }
       }
-      if (!!update) {
+      if (updated) {
         break;
       }
     }
@@ -162,8 +162,8 @@ export default class Store {
     // 将taskset跟新的todo插入到新任务集合中
     if (update.hasOwnProperty("tasksetId")) {
       while (i--) {
-        if (tasksetList[i].id === tasksetChangedTodo.tasksetId) {
-          tasksetList[i].todoList.push(tasksetChangedTodo);
+        if (tasksetList[i].id === toBeUpdated.tasksetId) {
+          tasksetList[i].todoList.push(toBeUpdated);
           break;
         }
       }
@@ -171,6 +171,35 @@ export default class Store {
 
     this.setLocalStorage(tasksetList);
 
+    if (callback) {
+      callback();
+    }
+  }
+
+  /**
+   * 更新一条todo
+   *
+   * @param {TasksetUpdate} update Record with an id and a property to update
+   * @param {function()} [callback] Called when partialRecord is applied
+   */
+  updateTaskset(update, callback) {
+    const id = update.id;
+    const tasksetList = this.getLocalStorage();
+    let i = tasksetList.length;
+    let k;
+
+    while (i--) {
+      if (tasksetList[i].id === id) {
+        for (k in update) {
+          
+          tasksetList[i][k] = update[k];
+        }
+        console.log(tasksetList[i]);
+        break;
+      }
+    }
+
+    this.setLocalStorage(tasksetList);
     if (callback) {
       callback();
     }

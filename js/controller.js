@@ -11,11 +11,12 @@ export default class Controller {
     this.store = store;
     this.view = view;
 
-    const curActiveTasksetId = [];
-    const curToggleBtn = [];
+    this.activeTasksetId = [];
+    this.curToggleBtn = [];
 
+    this.view.bindToggleItemComplete(this.toggleItemCompleted.bind(this));
     this.view.bindAddNewTodo(this.addItem.bind(this));
-
+    this.view.bindToggleTaskset(this.toggleTaskset.bind(this));
   }
 
   init() {
@@ -24,10 +25,10 @@ export default class Controller {
     this._filter();
   }
 
-  toggleItem() {
-    (id) => {
-      this.toggleItemCompleted(id);
-    };
+  toggleTaskset(id, active) {
+    this.store.updateTaskset({ id, active }, () => {
+      this.view.toggleTaskset(id);
+    });
   }
 
   /**
@@ -74,7 +75,7 @@ export default class Controller {
    * @param {!number} id
    * @param {!boolean} completed
    */
-  toggleCompleted(id, completed) {
+  toggleItemCompleted(id, completed) {
     this.store.update({ id, completed }, () => {
       // TODO 看看这个会不会出错？
       this.view.toggleItemCompleted(id);

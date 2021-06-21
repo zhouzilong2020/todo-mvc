@@ -50,3 +50,8 @@ export var ItemQuery;
  * @typedef {!({id: number, mes: string}|{id: number, completed: boolean}|{id: number, hide: boolean}|{id: number, task: boolean})}
  */
 export var ItemUpdate;
+
+/**
+ * @typedef {!({id: number, active: boolean})}
+ */
+export var TasksetUpdate;

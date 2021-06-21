@@ -1,6 +1,6 @@
 import { qs, $delegate, $on } from "./helper.js";
 import "./dateUtils.js";
-import { TodoList } from "./item.js";
+import { TasksetList, TodoList } from "./item.js";
 
 // toggle finish 的父节点为icon container,该节点的父节点有该list的id
 const _itemId = (element) =>
@@ -10,6 +10,14 @@ const _itemId = (element) =>
       element.parentNode.parentNode.dataset.id,
     10
   );
+
+const _active = (element) =>
+  element.classList.contains("active") ||
+  element.parentNode.classList.contains("active");
+
+const _complete = (element) =>
+  element.classList.contains("completed") ||
+  element.parentNode.classList.contains("completed");
 
 const _dueTime = (element) =>
   parseInt(element.dataset.due || element.parentNode.dataset.due, 10);
@@ -29,14 +37,13 @@ const _activeTasksetId = (eleList) => {
   }
   return result;
 };
+
 export default class View {
   /**
    * @param {!Template} template 模版生成
-   * @param {model} model 生成模版所需要的数据（数据驱动）
    */
-  constructor(template, model) {
+  constructor(template) {
     this.template = template;
-    this.model = model.data;
 
     this.$topToggle = qs(".top-bar .toggle");
 
@@ -56,10 +63,6 @@ export default class View {
 
   // 初始化绑定操作
   init() {
-    this.bindToggleTodoItem((id) => {
-      this.toggleItemCompleted(id);
-    });
-
     this.bindToggleTimebar((leftDay) => {
       const todoList = this.$todoContainer.querySelectorAll(".todo-item");
       const changeVisibilityIdList = [];
@@ -74,9 +77,7 @@ export default class View {
       console.log(changeVisibilityIdList);
       this.setTodoItemVisibility(changeVisibilityIdList);
     });
-    this.bindToggleTaskset((tasksetId) => {
-      this.toggleTasksetActiveness(tasksetId);
-    });
+
     this.bindToggleTopbar((toggleId) => {
       this.toggleTopBar(toggleId);
     });
@@ -118,7 +119,8 @@ export default class View {
       [".taskset-item", ".taskset-item span", ".taskset-item p"],
       "click",
       ({ target }) => {
-        handler(_itemId(target));
+        // 当前状态取反为下一个状态
+        handler(_itemId(target), !_active(target));
       },
       true,
       !!verbose
@@ -156,13 +158,14 @@ export default class View {
    * @param {function} handler handle function
    * @param {!boolean} verbose 打印事件冒泡和捕获信息
    */
-  bindToggleTodoItem(handler, verbose) {
+  bindToggleItemComplete(handler, verbose) {
     $delegate(
       this.$todoContainer,
       [".todo-item .finish-icon", ".todo-item", ".todo-item p"],
       "click",
       ({ target }) => {
-        handler(_itemId(target));
+        // 当前complete状态取反为下一个状态
+        handler(_itemId(target), !_complete(target));
       },
       true,
       !!verbose
@@ -214,7 +217,7 @@ export default class View {
    *
    * @param {!number} id Taskset ID
    */
-  toggleTasksetActiveness(id) {
+  toggleTaskset(id) {
     const tasksetItem = this.$tasksetList.querySelector(`[data-id="${id}"]`);
 
     if (tasksetItem.classList.contains("active")) {
@@ -269,7 +272,6 @@ export default class View {
   renderItem(todoList) {
     // TODO 增量式更新
     this.$todoContainer.innerHTML = "";
-    console.log(todoList);
     // 总任务数量统计信息
     var completedCnt = 0;
     var totalCnt = 0;
@@ -301,6 +303,11 @@ export default class View {
     this.$doneCnt.innerHTML = completedCnt;
   }
 
+  /**
+   * 根据传入的TasksetList 渲染页面, 仅在首次渲染时候有效！
+   *
+   * @param {TasksetList} tasksetList
+   */
   renderTaskset(tasksetList) {
     tasksetList.reduce((pre, cur) => {
       cur.leftCnt = 0;
@@ -312,45 +319,5 @@ export default class View {
       });
       this.$tasksetList.innerHTML += this.template.Taskset(cur);
     }, 0);
-  }
-  /**
-   * 数据驱动更新函数！
-   */
-  update() {
-    // 总任务数量统计信息
-    var leftCnt = 0;
-    var totalCnt = 0;
-    // 获取全部的list
-    const allTodoList = [];
-    this.model.taskset.reduce((preVal, curVal) => {
-      allTodoList.push(...curVal.todoList);
-      curVal.leftCnt = 0;
-      // 统计每一个任务集合中未完成的数量
-      curVal.todoList.forEach((element) => {
-        totalCnt++; // 所有任务数量+1
-        if (!element.completed) {
-          leftCnt++; // 剩余任务数量+1
-          curVal.leftCnt++;
-        }
-      });
-      this.$tasksetList.innerHTML += this.template.Taskset(curVal);
-    }, 0);
-    allTodoList.sort((a, b) => {
-      return a.due - b.due;
-    });
-
-    allTodoList.reduce(
-      (preVal, curVal) => {
-        if (preVal.due.getDate() !== curVal.due.getDate()) {
-          this.$todoContainer.innerHTML += this.template.TimeBar(curVal.due);
-        }
-        this.$todoContainer.innerHTML += this.template.Todo(curVal);
-        return curVal;
-      },
-      { due: new Date(0) }
-    );
-    this.$leftCnt.innerHTML = leftCnt;
-    this.$totalCnt.innerHTML = totalCnt;
-    this.$doneCnt.innerHTML = totalCnt - leftCnt;
   }
 }
