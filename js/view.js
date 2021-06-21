@@ -274,9 +274,18 @@ export default class View {
     this.$todoContainer.innerHTML = "";
     // TODO 按照不同顺序排列
     // TODO 按照优先级排列
+    // 排序规则
+    //  1. due 少的优先
+    //  2. 未完成优先
+    //  3. 后添加的优先
     todoList.sort((a, b) => {
-      return a.due - b.due;
+      return (
+        (!b.completed && a.completed) || // b已完成，a未完成，b优先级高
+        a.due - b.due || // b剩余日期小于a
+        b.id - a.id // b添加于a之后
+      );
     });
+
     todoList.reduce(
       (pre, cur) => {
         // 反序列化

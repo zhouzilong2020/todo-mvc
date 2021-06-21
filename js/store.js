@@ -149,7 +149,7 @@ export default class Store {
       const todoList = tasksetList[i].todoList;
       let j = todoList.length;
       while (j--) {
-        console.log(todoList[j].id, id);
+        //console.log(todoList[j].id, id);
         if (todoList[j].id === id) {
           // 记录需要更新的todo
           toBeUpdated = todoList[j];
@@ -159,7 +159,7 @@ export default class Store {
           }
           // 更新字段
           for (k in update) {
-            // console.log("updated");
+            // //console.log("updated");
             toBeUpdated[k] = update[k];
           }
           updated = true;
@@ -224,9 +224,9 @@ export default class Store {
     let i = tasksetList.length;
     while (i--) {
       if (tasksetList[i].id == todo.tasksetId) {
-        console.log(tasksetList[i]);
+        //console.log(tasksetList[i]);
         tasksetList[i].todoList.push(todo);
-        console.log(tasksetList[i]);
+        //console.log(tasksetList[i]);
         break;
       }
     }
@@ -279,7 +279,7 @@ export default class Store {
     while (i--) {
       completed += allTodo[i].completed;
     }
-    console.log(completed);
+    //console.log(completed);
     callback(total, total - completed, completed);
   }
 }

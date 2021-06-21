@@ -32,11 +32,12 @@ Date.prototype.GetDay = function () {
     5: "FRI",
     6: "SAT",
   };
-  
+
   return o[this.getDay()];
 };
 
 Date.prototype.LeftDay = function () {
-  const curDate = new Date();
-  return this.getDate() - curDate.getDate();
+  return Math.floor(
+    parseInt(this.getTime() - Date.now(), 10) / 1000 / 60 / 60 / 24
+  );
 };

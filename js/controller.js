@@ -40,7 +40,7 @@ export default class Controller {
    */
   addItem(mes, tasksetId, due) {
     if (!!!due) {
-      due = new Date(Date.now() + Math.random() * 1000000 + 1000000);
+      due = new Date(Date.now() + Math.random() * 5000100000 + 1000100000);
     }
     this.store.insert(
       {
@@ -77,8 +77,8 @@ export default class Controller {
    */
   toggleItemCompleted(id, completed) {
     this.store.update({ id, completed }, () => {
-      // TODO 看看这个会不会出错？
       this.view.toggleItemCompleted(id);
+      this._filter();
     });
   }
 
@@ -94,5 +94,7 @@ export default class Controller {
     // ) {
     this.store.find(emptyItemQuery, this.view.renderItem.bind(this.view));
     this.store.count(this.view.setStatistic.bind(this.view));
+    
+    
   }
 }
