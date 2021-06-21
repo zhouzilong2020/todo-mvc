@@ -39,8 +39,9 @@ const _activeTasksetId = (eleList) => {
 };
 const _clientX = (event) => event.changedTouches[0].clientX;
 
-const btnExpandWidth = 80;
-const directDeleteWidth = 200;
+const rBtnExpandWidth = 80;
+const lBtnExpandWidth = 180;
+
 export default class View {
   /**
    * @param {!Template} template 模版生成
@@ -57,9 +58,9 @@ export default class View {
     this.$todoContainer = qs(".todo-container");
     this.$tasksetList = qs(".taskset-list");
 
-    this.$lastScrollBtn = null;
+    this.$lastScrollBtnR = null;
+    this.$lastScrollBtnL = null;
     this.$lastScrollCtx = null;
-    this.$lastScrollIcon = null;
     this.startX = 0;
   }
 
@@ -78,24 +79,18 @@ export default class View {
       this.setTodoItemVisibility(changeVisibilityIdList);
     });
 
-    // 如何添加截止日期？
-    // const date = this.$inputBar.querySelector(".date-selector");
-    // console.log(date.click());
     this.bindTouchStart((id, startX) => {
       this.$lastScrollCtx = this.$todoContainer.querySelector(
         `[data-id="${id}"]`
       );
-      this.$lastScrollBtn = this.$todoContainer.querySelector(
+      this.$lastScrollBtnR = this.$todoContainer.querySelector(
         `[data-id="${id}"] .delete-btn`
       );
-      this.$lastScrollIcon = this.$todoContainer.querySelector(
-        `[data-id="${id}"] .delete-btn span`
+      this.$lastScrollBtnL = this.$todoContainer.querySelector(
+        `[data-id="${id}"] .change-task-btn-group`
       );
-
-      this.$lastScrollBtn.style.transition = "";
-      this.$lastScrollIcon.style.transition = "";
-      this.$lastScrollCtx.style.transition = "";
-
+      // 清空transition，操作顺滑
+      this.setTransition("");
       this.startX = startX;
     });
 
@@ -111,43 +106,53 @@ export default class View {
     });
   }
 
-  setContent(diffX) {
-    diffX = Math.max(0, diffX);
+  setTransition(sec) {
+    this.$lastScrollBtnR.style.transition = sec;
+    this.$lastScrollBtnL.style.transition = sec;
+    this.$lastScrollCtx.style.transition = sec;
+    this.$lastScrollBtnR.firstElementChild.style.transition = sec;
+  }
 
-    // 添加transition
-    this.$lastScrollBtn.style.transition = "0.6s";
-    this.$lastScrollIcon.style.transition = "0.6s";
-    this.$lastScrollCtx.style.transition = "0.6s";
+  moveElement(diffX) {
+    const rBtnMoveX = Math.max(0, diffX);
+    this.$lastScrollBtnR.style.right = `${-rBtnMoveX}px`;
+    this.$lastScrollBtnR.style.width = `${rBtnMoveX}px`;
 
-    // TODO 左滑大于一定距离直接删除 直接删掉该条记录？
-    if (btnExpandWidth * 0.618 <= diffX) {
-      diffX = btnExpandWidth;
-      this.$lastScrollIcon.style.opacity = "1";
+    // 左边滑到最大不能再滑动了
+    const lBtnMoveX = Math.max(Math.min(0, diffX), -lBtnExpandWidth);
+    this.$lastScrollBtnL.style.left = `${lBtnMoveX}px`;
+    this.$lastScrollBtnL.style.width = `${-lBtnMoveX}px`;
+
+    if (diffX > 0) {
+      this.$lastScrollCtx.style.left = `${-diffX}px`;
     } else {
-      this.$lastScrollIcon.style.opacity = "0";
+      this.$lastScrollCtx.style.left = `${-lBtnMoveX}px`;
+    }
+    if (rBtnMoveX >= 0.618 * rBtnExpandWidth) {
+      this.$lastScrollBtnR.firstElementChild.style.opacity = "1";
+    } else {
+      this.$lastScrollBtnR.firstElementChild.style.fontsize = "0";
+      this.$lastScrollBtnR.firstElementChild.style.opacity = "0";
+    }
+  }
+
+  setContent(diffX) {
+    this.setTransition("0.6s");
+    // TODO 左滑大于一定距离直接删除 直接删掉该条记录
+    if (rBtnExpandWidth * 0.618 <= diffX) {
+      // 左滑动
+      diffX = rBtnExpandWidth;
+    } else if (diffX <= -lBtnExpandWidth * 0.618) {
+      // 右滑动
+      diffX = -lBtnExpandWidth;
+    } else {
       diffX = 0;
     }
-
-    this.$lastScrollCtx.style.left = `${-diffX}px`;
-    const deleteBtnMoveX = Math.max(0, diffX);
-    this.$lastScrollBtn.style.right = `${-deleteBtnMoveX}px`;
-    this.$lastScrollBtn.style.width = `${deleteBtnMoveX}px`;
+    this.moveElement(diffX);
   }
 
   moveContent(diffX) {
-    const deleteBtnMoveX = Math.max(0, diffX);
-    this.$lastScrollBtn.style.right = `${-deleteBtnMoveX}px`;
-    this.$lastScrollBtn.style.width = `${deleteBtnMoveX}px`;
-    
-    
-    this.$lastScrollCtx.style.left = `${-diffX}px`;
-
-    // 设置icon的可见度
-    if (diffX >= btnExpandWidth * 0.618) {
-      this.$lastScrollIcon.style.opacity = "1";
-    } else {
-      this.$lastScrollIcon.style.opacity = "0";
-    }
+    this.moveElement(diffX);
   }
 
   bindTouchStart(handler, verbose) {

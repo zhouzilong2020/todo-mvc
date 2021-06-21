@@ -192,7 +192,7 @@ span {
   position: relative;
   height: auto;
   border-radius: 10px;
-  
+
   background-color: rgba(32, 57, 85, 100);
 }
 
@@ -202,19 +202,18 @@ span {
   position: absolute;
   top: 0px;
   height: 100%;
-
-  width: 50px;
   align-items: center;
   justify-content: center;
 }
 
 /* delete-btn */
 .todo-container .todo-item .delete-btn {
+  right: -40px;
   background-color: red;
-  right: -80px;
 }
 
 .todo-container .todo-item .delete-btn span {
+  /* font-size: 0px; */
   opacity: 0;
 }
 
@@ -226,8 +225,7 @@ span {
   height: 100%;
   top: 0px;
 
-  left: -150px;
-  width: 150px;
+  width: 0px;
 }
 
 .todo-container .todo-item .change-task-btn-group > div {
