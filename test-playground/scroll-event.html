@@ -11,7 +11,8 @@
       data-id="1"
       id="container"
       style="
-        background-color: red;
+        background-color: green;
+        transition: 0.2s;
         width: 80%;
         height: 100px;
         margin: 0 auto;
@@ -23,21 +24,26 @@
         data-id="3"
         style="
           display: block;
-          background-color: black;
-          height: 100%;
+          background-color: blue;
+          transition: 0.2s;
+          width: 80%;
+
           position: absolute;
         "
       >
-        hghghghs
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto, a
+        exercitationem? Eos, natus! Accusamus, recusandae quo! Reiciendis
+        veritatis soluta a, error quis maiores hic, et aspernatur labore itaque
+        vel minus?
       </div>
       <div
         data-id="2"
         style="
+          transition: 0.2s;
           display: block;
           background-color: black;
           height: 100%;
           position: absolute;
-
           right: 0;
         "
       ></div>
@@ -69,19 +75,24 @@
         content.style.left = -diffX + "px";
 
         const id = event.target.dataset.id;
+
         btn.style.width = `${diffX}px`;
       });
 
       div.addEventListener("touchend", (event) => {
         event.stopPropagation();
+        const id = event.target.dataset.id;
         let diffX = Math.max(
           0,
           Math.min(startX - event.changedTouches[0].clientX, maxWidth)
         );
-        if (diffX > maxWidth / 2) {
+        if (diffX > maxWidth * 0.618) {
           diffX = maxWidth;
+        } else {
+          diffX = 0;
         }
-        const id = event.target.dataset.id;
+
+        content.style.left = -diffX + "px";
 
         btn.style.width = `${diffX}px`;
         console.log([`id:${id}\n`, `diffX:${diffX}`].join(" "));
