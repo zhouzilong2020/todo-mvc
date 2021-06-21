@@ -290,6 +290,6 @@ export default class Store {
   }
 
   countTaskset(callback) {
-    callback(this.getLocalStorage());
+    // callback(this.getLocalStorage());
   }
 }

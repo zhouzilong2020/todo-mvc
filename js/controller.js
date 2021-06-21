@@ -108,9 +108,12 @@ export default class Controller {
         done: { completed: true },
         left: { completed: false },
       }[state],
-      this.view.renderItem.bind(this.view)
+      (res) => {
+        this.view.renderItem.call(this.view, res);
+        this.view.setTasksetStatistic.call(this.view, res);
+      }
     );
-    this.store.countTaskset(this.view.renderTaskset.bind(this.view));
+
     this.store.countTodo(this.view.setStatistic.bind(this.view));
   }
 }

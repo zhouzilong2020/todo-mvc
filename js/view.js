@@ -57,7 +57,6 @@ export default class View {
     this.$todoContainer = qs(".todo-container");
 
     this.$tasksetList = qs(".taskset-list");
-
     var hasRenderedTaskset = false;
   }
 
@@ -298,15 +297,27 @@ export default class View {
   renderTaskset(tasksetList) {
     this.$tasksetList.innerHTML = "";
     tasksetList.reduce((pre, cur) => {
-      cur.leftCnt = 0;
-      // 统计每一个任务集合中未完成的数量
-      cur.todoList.forEach((element) => {
-        if (!!!element.completed) {
-          cur.leftCnt++;
-        }
-      });
       this.$tasksetList.innerHTML += this.template.Taskset(cur);
     }, 0);
+  }
+
+  setTasksetStatistic(todoList) {
+    const cnt = {};
+    todoList.reduce((pre, cur) => {
+      console.log(cur);
+      if (!!!cnt[cur.tasksetId]) {
+        cnt[cur.tasksetId] = 1;
+      } else {
+        cnt[cur.tasksetId]++;
+      }
+    }, cnt);
+
+    console.log(cnt);
+    for (let k in cnt) {
+      const $cnt = (this.$tasksetList.querySelector(
+        `[data-id="${k}"] .task-cnt`
+      ).innerText = cnt[k]);
+    }
   }
 
   setStatistic(total, left, done) {
