@@ -78,9 +78,9 @@ export default class View {
       this.setTodoItemVisibility(changeVisibilityIdList);
     });
 
-    this.bindToggleTopbar((toggleId) => {
-      this.toggleTopBar(toggleId);
-    });
+    // this.bindToggleTopbar((toggleId) => {
+    //   this.toggleTopBar(toggleId);
+    // });
 
     // TODO 怎么存储？
     this.bindAddNewTodo(() => {});
@@ -89,7 +89,7 @@ export default class View {
     // const date = this.$inputBar.querySelector(".date-selector");
     // console.log(date.click());
   }
-
+  
   /**
    * 绑定顶部toggle
    * @param {function} handler handle function
@@ -196,7 +196,6 @@ export default class View {
    * @param {!number} id toggle-item ID
    */
   toggleTopBar(id) {
-    console.log(id);
     const toggleList = this.$topToggle.children;
     let i = toggleList.length;
     while (i--) {
@@ -278,18 +277,13 @@ export default class View {
     //  1. due 少的优先
     //  2. 未完成优先
     //  3. 后添加的优先
+
     todoList.sort((a, b) => {
-      return (
-        (!b.completed && a.completed) || // b已完成，a未完成，b优先级高
-        a.due - b.due || // b剩余日期小于a
-        b.id - a.id // b添加于a之后
-      );
+      return a.due.LeftDay() - b.due.LeftDay();
     });
 
     todoList.reduce(
       (pre, cur) => {
-        // 反序列化
-        cur.due = new Date(cur.due);
         if (pre.due.getDate() !== cur.due.getDate()) {
           this.$todoContainer.innerHTML += this.template.TimeBar(cur.due);
         }

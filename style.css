@@ -36,6 +36,9 @@ body {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
 }
+.toggle .active {
+  background-color: red;
+}
 .toggle .toggle-item {
   height: 60px;
   margin-top: 3px;

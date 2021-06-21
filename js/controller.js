@@ -11,16 +11,24 @@ export default class Controller {
     this.store = store;
     this.view = view;
 
-    this.toggleState = [];
-
     this.view.bindToggleItemComplete(this.toggleItemCompleted.bind(this));
     this.view.bindAddNewTodo(this.addItem.bind(this));
     this.view.bindToggleTaskset(this.toggleTaskset.bind(this));
+
+    this.view.bindToggleTopbar(this.toggleTopBar.bind(this));
+
+    this.curToggleState = "";
   }
 
   init() {
     this.view.init();
     this.store.init(this.view.renderTaskset.bind(this.view));
+    this._filter();
+  }
+
+  toggleTopBar(toggleId) {
+    this.curToggleState = toggleId;
+    this.view.toggleTopBar(toggleId);
     this._filter();
   }
 
@@ -40,7 +48,7 @@ export default class Controller {
    */
   addItem(mes, tasksetId, due) {
     if (!!!due) {
-      due = new Date(Date.now() + Math.random() * 5000100000 + 1000100000);
+      due = new Date(Date.now() + Math.random() * 5000100000);
     }
     this.store.insert(
       {
@@ -87,14 +95,22 @@ export default class Controller {
    * TODO 增量式渲染
    */
   _filter() {
+    const state = this.curToggleState;
     // if (
     //   force ||
     //   this._lastActiveRoute !== "" ||
     //   this._lastActiveRoute !== route
     // ) {
-    this.store.find(emptyItemQuery, this.view.renderItem.bind(this.view));
+    this.store.find(
+      {
+        "": emptyItemQuery,
+        total: emptyItemQuery,
+        done: { completed: true },
+        left: { completed: false },
+      }[state],
+      this.view.renderItem.bind(this.view)
+    );
+
     this.store.count(this.view.setStatistic.bind(this.view));
-    
-    
   }
 }

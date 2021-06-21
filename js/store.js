@@ -117,17 +117,23 @@ export default class Store {
     const tasksetList = this.getLocalStorage();
     const todoList = _activeTodoList(tasksetList);
     let k;
-    callback(
-      todoList.filter((todo) => {
-        // 如果传入的是emptyQuery，则不会进入for，默认筛选全部的todo
-        for (k in query) {
-          if (query[k] !== todo[k]) {
-            return false;
-          }
+
+    const result = todoList.filter((todo) => {
+      // 如果传入的是emptyQuery，则不会进入for，默认筛选全部的todo
+      for (k in query) {
+        if (query[k] !== todo[k]) {
+          return false;
         }
-        return true;
-      })
-    );
+      }
+      return true;
+    });
+
+    let i = result.length;
+    while (i--) {
+      result[i].due = new Date(result[i].due);
+    }
+    // 反序列化
+    callback(result);
   }
 
   /**
