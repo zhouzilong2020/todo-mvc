@@ -37,7 +37,10 @@ const _activeTasksetId = (eleList) => {
   }
   return result;
 };
+const _clientX = (event) => event.changedTouches[0].clientX;
 
+const deleteBtnExpandWidth = 80;
+const directDeleteWidth = 200;
 export default class View {
   /**
    * @param {!Template} template 模版生成
@@ -46,18 +49,18 @@ export default class View {
     this.template = template;
 
     this.$topToggle = qs(".top-bar .toggle");
-
     this.$leftCnt = qs(".top-bar .toggle .toggle-item .toggle-left");
     this.$doneCnt = qs(".top-bar .toggle .toggle-item .toggle-done");
     this.$totalCnt = qs(".top-bar .toggle .toggle-item .toggle-total");
-
     this.$inputBar = qs(".top-bar .input-bar");
     this.$input = qs(".top-bar .input-bar .text-input");
-
     this.$todoContainer = qs(".todo-container");
-
     this.$tasksetList = qs(".taskset-list");
-    var hasRenderedTaskset = false;
+
+    this.$lastScrollBtn = null;
+    this.$lastScrollCtx = null;
+    this.$lastScrollIcon = null;
+    this.startX = 0;
   }
 
   // 初始化绑定操作
@@ -72,13 +75,119 @@ export default class View {
           changeVisibilityIdList.push(todoList[i]);
         }
       }
-      console.log(changeVisibilityIdList);
       this.setTodoItemVisibility(changeVisibilityIdList);
     });
 
     // 如何添加截止日期？
     // const date = this.$inputBar.querySelector(".date-selector");
     // console.log(date.click());
+    this.bindTouchDeleteStart((id, startX) => {
+      this.$lastScrollCtx = this.$todoContainer.querySelector(
+        `[data-id="${id}"]`
+      );
+      this.$lastScrollBtn = this.$todoContainer.querySelector(
+        `[data-id="${id}"] .delete-btn`
+      );
+      this.$lastScrollIcon = this.$todoContainer.querySelector(
+        `[data-id="${id}"] .delete-btn span`
+      );
+
+      this.$lastScrollBtn.style.transition = "";
+      this.$lastScrollIcon.style.transition = "";
+      this.$lastScrollCtx.style.transition = "";
+
+      this.startX = startX;
+    });
+
+    this.bindTouchDeleteMove((movingX) => {
+      // >0向左
+      // <0向右
+      const diffX = this.startX - movingX;
+      this.moveDeleteBtn(diffX);
+    });
+
+    this.bindTouchDeleteEnd((endX) => {
+      const diffX = this.startX - endX;
+      this.setDeleteBtn(diffX);
+    });
+  }
+
+  setDeleteBtn(diffX) {
+    diffX = Math.max(0, diffX);
+    // 添加transition
+    this.$lastScrollBtn.style.transition = "0.6s";
+    this.$lastScrollIcon.style.transition = "0.6s";
+    this.$lastScrollCtx.style.transition = "0.6s";
+
+    if (diffX > 0) {
+      // TODO 左滑大于一定距离直接删除 直接删掉该条记录？
+      if (deleteBtnExpandWidth * 0.618 <= diffX) {
+        diffX = deleteBtnExpandWidth;
+        this.$lastScrollIcon.style.opacity = "1";
+      } else {
+        this.$lastScrollIcon.style.opacity = "0";
+        diffX = 0;
+      }
+      this.$lastScrollCtx.style.left = `${-diffX}px`;
+      this.$lastScrollBtn.style.right = `${-diffX}px`;
+      this.$lastScrollBtn.style.width = `${diffX}px`;
+    }
+  }
+
+  moveDeleteBtn(diffX) {
+    // 向左滑动
+    if (diffX) {
+      this.$lastScrollCtx.style.left = `${-diffX}px`;
+      this.$lastScrollBtn.style.right = `${-diffX}px`;
+      this.$lastScrollBtn.style.width = `${diffX}px`;
+
+      // 设置icon的可见度
+      if (diffX >= deleteBtnExpandWidth * 0.618) {
+        this.$lastScrollIcon.style.opacity = "1";
+      } else {
+        this.$lastScrollIcon.style.opacity = "0";
+      }
+    } else {
+    }
+  }
+
+  bindTouchDeleteStart(handler, verbose) {
+    $delegate(
+      this.$todoContainer,
+      [".todo-item", ".todo-item .finish-icon", ".todo-item p"],
+      "touchstart",
+      ({ target }) => {
+        handler(_itemId(target), _clientX(event));
+      },
+      true,
+      !!verbose
+    );
+  }
+
+  bindTouchDeleteMove(handler, verbose) {
+    $delegate(
+      this.$todoContainer,
+      [".todo-item", ".todo-item .finish-icon", ".todo-item p"],
+      "touchmove",
+      ({ target }) => {
+        handler(_clientX(event));
+      },
+      true,
+      !!verbose
+    );
+  }
+
+  bindTouchDeleteEnd(handler, verbose) {
+    $delegate(
+      this.$todoContainer,
+      [".todo-item", ".todo-item .finish-icon", ".todo-item p"],
+      "touchend",
+      ({ target }) => {
+        handler(_clientX(event));
+      },
+      true,
+      !!verbose
+    );
   }
 
   /**
@@ -173,6 +282,24 @@ export default class View {
     );
   }
 
+
+  bindDeleteItem(handler, verbose) {
+    $delegate(
+      this.$todoContainer,
+      [
+        ".todo-item .delete-btn",
+        ".todo-item .delete-btn span",
+      ],
+      "click",
+      ({ target }) => {
+        // 当前complete状态取反为下一个状态
+        handler(_itemId(target));
+        console.log("delete")
+      },
+      true,
+      !!verbose
+    );
+  }
   /**
    * 绑定toggle 时间轴，隐藏或者展示中间的task
    * @param {function} handler handle function

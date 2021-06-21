@@ -46,6 +46,9 @@ export default class Template {
     }">
   <div class="icon-container"><div class="finish-icon"></div></div>
   <p>${todo.mes}</p>
+  <div class="delete-btn" >
+    <span class="material-icons" >delete</span>
+  </div>
 </div>`;
   }
 }

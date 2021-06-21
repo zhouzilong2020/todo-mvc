@@ -183,19 +183,38 @@ span {
 }
 .todo-container .hide {
   line-height: 0px;
-  
+
   display: none;
 }
 
 .todo-container .todo-item {
-  width: 84%;
-  margin-left: 10%;
+  width: 100%;
+  /* margin-left: 10%; */
+  position: relative;
   height: auto;
   border-radius: 10px;
   background-color: rgba(32, 57, 85, 100);
-
-  transition: 0.4s;
 }
+
+/* delete-btn */
+.todo-container .todo-item .delete-btn {
+  display: flex;
+  border-radius: 5px;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  height: 100%;
+  align-items: center;
+  background-color: red;
+
+  width: 0px;
+  justify-content: center;
+}
+
+.todo-container .todo-item .delete-btn span{
+  opacity: 0;
+}
+
 .todo-container .todo-item p {
   vertical-align: middle;
   margin-left: 10px;

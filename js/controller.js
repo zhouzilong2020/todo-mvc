@@ -16,6 +16,7 @@ export default class Controller {
     this.view.bindToggleTaskset(this.toggleTaskset.bind(this));
 
     this.view.bindToggleTopbar(this.toggleTopBar.bind(this));
+    this.view.bindDeleteItem(this.deleteItem.bind(this));
     // this.view.bindToggleTimebar(this.toggleTimeBar.bind(this))
     this.curToggleState = "";
   }
@@ -30,6 +31,12 @@ export default class Controller {
     this.curToggleState = toggleId;
     this.view.toggleTopBar(toggleId);
     this._filter();
+  }
+
+  deleteItem(id) {
+    this.store.remove({ id }, () => {
+      this._filter();
+    });
   }
 
   toggleTaskset(id, active) {

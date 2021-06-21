@@ -45,7 +45,6 @@ export function $delegate(target, selector, type, handler, capture, verbose) {
   const dispatchEvent = (event) => {
     const targetElement = event.target;
     const potentialElements = target.querySelectorAll(selector);
-
     if (verbose) {
       console.log("target", targetElement);
       console.log("potaintial Match", potentialElements);

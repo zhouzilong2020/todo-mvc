@@ -253,17 +253,20 @@ export default class Store {
     let i = tasksetList.length;
     let k;
     while (i--) {
-      const todoList = tasksetList[i];
+      const todoList = tasksetList[i].todoList;
       let j = todoList.length;
       // 遍历当前任务集中的todolist
       while (j--) {
+        console.log(j)
         for (k in query) {
+          console.log(query[k], todoList[j][k]);
           if (query[k] === todoList[j][k]) {
             // 更新todoList
             todoList.splice(j, 1);
           }
         }
       }
+
     }
     this.setLocalStorage(tasksetList);
 

@@ -17,24 +17,46 @@
           error quasi dolorem, totam assumenda laudantium? Non modi eius
           recusandae assumenda beatae.
         </p>
+        <div class="delete-btn" >
+          <span class="material-icons" >delete</span>
+        </div>
         <div
-          class="btn-group"
+          class="btn-left"
           style="
-            transition: 0.4s;
             display: flex;
             border-radius: 5px;
             position: absolute;
             top: 0px;
-            right: 0px;
-            width: 0px;
+            left: 0px;
             height: 100%;
-
-            justify-content: center;
             align-items: center;
             background-color: red;
+
+            width: 80px;
+            justify-content: center;
           "
         >
-          <span class="material-icons" style="opacity: 0; transition: 0.2s"
+          <span
+            class="material-icons"
+            style="
+              text-align: center;
+              display: block;
+
+              width: 100%;
+              opacity: 1;
+              transition: 0.2s;
+            "
+            >delete</span
+          >
+          <span
+            class="material-icons"
+            style="
+              text-align: center;
+              display: block;
+              width: 100%;
+              opacity: 1;
+              transition: 0.2s;
+            "
             >delete</span
           >
         </div>
@@ -43,12 +65,13 @@
 
     <script>
       const div = document.querySelector(".todo-container");
-      const btn = document.querySelector(".btn-group");
+      const btn = document.querySelector(".delete-btn");
       const btnIcon = btn.querySelector("span");
       const content = document.querySelector(".todo-item");
 
       var startX;
       const maxWidth = "80";
+      const fixWidth = "300";
 
       div.addEventListener("touchstart", (event) => {
         event.stopPropagation();
@@ -56,16 +79,19 @@
         const touchStart = event.changedTouches[0];
         startX = touchStart.clientX;
 
-        console.log([`id:${id}\n`, `startX:${startX}`].join(" "));
+        // 删掉transition
+        btn.style.transition = "";
+        btnIcon.style.transition = "";
+        content.style.transition = "";
+        console.log(btn.style.transition);
+
+        // console.log([`id:${id}\n`, `startX:${startX}`].join(" "));
       });
 
       div.addEventListener("touchmove", (event) => {
         const id = event.target.dataset.id;
 
-        let diffX = Math.max(
-          0,
-          Math.min(startX - event.changedTouches[0].clientX, maxWidth)
-        );
+        let diffX = Math.max(0, startX - event.changedTouches[0].clientX);
 
         content.style.left = `${-diffX}px`;
         if (diffX > maxWidth * 0.618) {
@@ -84,14 +110,27 @@
         const id = event.target.dataset.id;
         let diffX = Math.max(
           0,
-          Math.min(startX - event.changedTouches[0].clientX, maxWidth)
+          Math.min(startX - event.changedTouches[0].clientX)
         );
-        if (diffX > maxWidth * 0.618) {
+
+        // 添加transition
+        btn.style.transition = 0.6 + "s";
+        btnIcon.style.transition = 0.6 + "s";
+        content.style.transition = 0.6 + "s";
+
+        console.log(diffX);
+
+        if (fixWidth * 0.7 > diffX && diffX > maxWidth * 0.618) {
           diffX = maxWidth;
           btnIcon.style.opacity = "1";
-        } else {
+        } else if (diffX < maxWidth * 0.618) {
           diffX = 0;
           btnIcon.style.opacity = "0";
+        } else {
+          diffX = fixWidth;
+          console.log(diffX);
+          btnIcon.style.opacity = "1";
+          btn.style.justifycontent = "flex-start";
         }
 
         content.style.left = `${-diffX}px`;
@@ -99,7 +138,7 @@
         btn.style.width = `${diffX}px`;
         event.stopPropagation();
 
-        console.log([`id:${id}\n`, `diffX:${diffX}`].join(" "));
+        // console.log([`id:${id}\n`, `diffX:${diffX}`].join(" "));
       });
     </script>
   </body>
