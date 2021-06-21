@@ -257,7 +257,7 @@ export default class Store {
       let j = todoList.length;
       // 遍历当前任务集中的todolist
       while (j--) {
-        console.log(j)
+        console.log(j);
         for (k in query) {
           console.log(query[k], todoList[j][k]);
           if (query[k] === todoList[j][k]) {
@@ -266,7 +266,6 @@ export default class Store {
           }
         }
       }
-
     }
     this.setLocalStorage(tasksetList);
 

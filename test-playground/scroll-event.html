@@ -17,55 +17,26 @@
           error quasi dolorem, totam assumenda laudantium? Non modi eius
           recusandae assumenda beatae.
         </p>
-        <div class="delete-btn" >
-          <span class="material-icons" >delete</span>
-        </div>
-        <div
-          class="btn-left"
-          style="
-            display: flex;
-            border-radius: 5px;
-            position: absolute;
-            top: 0px;
-            left: 0px;
-            height: 100%;
-            align-items: center;
-            background-color: red;
 
-            width: 80px;
-            justify-content: center;
-          "
-        >
-          <span
-            class="material-icons"
-            style="
-              text-align: center;
-              display: block;
-
-              width: 100%;
-              opacity: 1;
-              transition: 0.2s;
-            "
-            >delete</span
-          >
-          <span
-            class="material-icons"
-            style="
-              text-align: center;
-              display: block;
-              width: 100%;
-              opacity: 1;
-              transition: 0.2s;
-            "
-            >delete</span
-          >
+        <div class="change-task-btn-group">
+          <div class="btn-1">
+            <span style="opacity: 1; transition: 0.2s">1</span>
+          </div>
+          <div class="btn-2">
+            <span style="opacity: 1; transition: 0.2s">2</span>
+          </div>
+          <div class="btn-3">
+            <span style="opacity: 1; transition: 0.2s">3</span>
+          </div>
         </div>
+
+        
       </div>
     </div>
 
     <script>
       const div = document.querySelector(".todo-container");
-      const btn = document.querySelector(".delete-btn");
+      const btn = document.querySelector(".change-task-btn-group");
       const btnIcon = btn.querySelector("span");
       const content = document.querySelector(".todo-item");
 
@@ -91,17 +62,18 @@
       div.addEventListener("touchmove", (event) => {
         const id = event.target.dataset.id;
 
-        let diffX = Math.max(0, startX - event.changedTouches[0].clientX);
-
+        let diffX = Math.max(0, -(startX - event.changedTouches[0].clientX));
+        diffX = -diffX;
         content.style.left = `${-diffX}px`;
+
         if (diffX > maxWidth * 0.618) {
           btnIcon.style.opacity = "1";
         } else {
           btnIcon.style.opacity = "0";
         }
 
-        btn.style.right = `${-diffX}px`;
-        btn.style.width = `${diffX}px`;
+        btn.style.right = `${diffX}px`;
+        btn.style.width = `${-diffX}px`;
 
         event.stopPropagation();
       });

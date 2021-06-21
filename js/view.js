@@ -39,7 +39,7 @@ const _activeTasksetId = (eleList) => {
 };
 const _clientX = (event) => event.changedTouches[0].clientX;
 
-const deleteBtnExpandWidth = 80;
+const btnExpandWidth = 80;
 const directDeleteWidth = 200;
 export default class View {
   /**
@@ -81,7 +81,7 @@ export default class View {
     // 如何添加截止日期？
     // const date = this.$inputBar.querySelector(".date-selector");
     // console.log(date.click());
-    this.bindTouchDeleteStart((id, startX) => {
+    this.bindTouchStart((id, startX) => {
       this.$lastScrollCtx = this.$todoContainer.querySelector(
         `[data-id="${id}"]`
       );
@@ -99,59 +99,58 @@ export default class View {
       this.startX = startX;
     });
 
-    this.bindTouchDeleteMove((movingX) => {
-      // >0向左
-      // <0向右
+    // TODO 滑动大于一定数值直接删除
+    this.bindTouchMove((movingX) => {
       const diffX = this.startX - movingX;
-      this.moveDeleteBtn(diffX);
+      this.moveContent(diffX);
     });
 
-    this.bindTouchDeleteEnd((endX) => {
+    this.bindTouchEnd((endX) => {
       const diffX = this.startX - endX;
-      this.setDeleteBtn(diffX);
+      this.setContent(diffX);
     });
   }
 
-  setDeleteBtn(diffX) {
+  setContent(diffX) {
     diffX = Math.max(0, diffX);
+
     // 添加transition
     this.$lastScrollBtn.style.transition = "0.6s";
     this.$lastScrollIcon.style.transition = "0.6s";
     this.$lastScrollCtx.style.transition = "0.6s";
 
-    if (diffX > 0) {
-      // TODO 左滑大于一定距离直接删除 直接删掉该条记录？
-      if (deleteBtnExpandWidth * 0.618 <= diffX) {
-        diffX = deleteBtnExpandWidth;
-        this.$lastScrollIcon.style.opacity = "1";
-      } else {
-        this.$lastScrollIcon.style.opacity = "0";
-        diffX = 0;
-      }
-      this.$lastScrollCtx.style.left = `${-diffX}px`;
-      this.$lastScrollBtn.style.right = `${-diffX}px`;
-      this.$lastScrollBtn.style.width = `${diffX}px`;
-    }
-  }
-
-  moveDeleteBtn(diffX) {
-    // 向左滑动
-    if (diffX) {
-      this.$lastScrollCtx.style.left = `${-diffX}px`;
-      this.$lastScrollBtn.style.right = `${-diffX}px`;
-      this.$lastScrollBtn.style.width = `${diffX}px`;
-
-      // 设置icon的可见度
-      if (diffX >= deleteBtnExpandWidth * 0.618) {
-        this.$lastScrollIcon.style.opacity = "1";
-      } else {
-        this.$lastScrollIcon.style.opacity = "0";
-      }
+    // TODO 左滑大于一定距离直接删除 直接删掉该条记录？
+    if (btnExpandWidth * 0.618 <= diffX) {
+      diffX = btnExpandWidth;
+      this.$lastScrollIcon.style.opacity = "1";
     } else {
+      this.$lastScrollIcon.style.opacity = "0";
+      diffX = 0;
+    }
+
+    this.$lastScrollCtx.style.left = `${-diffX}px`;
+    const deleteBtnMoveX = Math.max(0, diffX);
+    this.$lastScrollBtn.style.right = `${-deleteBtnMoveX}px`;
+    this.$lastScrollBtn.style.width = `${deleteBtnMoveX}px`;
+  }
+
+  moveContent(diffX) {
+    const deleteBtnMoveX = Math.max(0, diffX);
+    this.$lastScrollBtn.style.right = `${-deleteBtnMoveX}px`;
+    this.$lastScrollBtn.style.width = `${deleteBtnMoveX}px`;
+    
+    
+    this.$lastScrollCtx.style.left = `${-diffX}px`;
+
+    // 设置icon的可见度
+    if (diffX >= btnExpandWidth * 0.618) {
+      this.$lastScrollIcon.style.opacity = "1";
+    } else {
+      this.$lastScrollIcon.style.opacity = "0";
     }
   }
 
-  bindTouchDeleteStart(handler, verbose) {
+  bindTouchStart(handler, verbose) {
     $delegate(
       this.$todoContainer,
       [".todo-item", ".todo-item .finish-icon", ".todo-item p"],
@@ -164,7 +163,7 @@ export default class View {
     );
   }
 
-  bindTouchDeleteMove(handler, verbose) {
+  bindTouchMove(handler, verbose) {
     $delegate(
       this.$todoContainer,
       [".todo-item", ".todo-item .finish-icon", ".todo-item p"],
@@ -177,7 +176,7 @@ export default class View {
     );
   }
 
-  bindTouchDeleteEnd(handler, verbose) {
+  bindTouchEnd(handler, verbose) {
     $delegate(
       this.$todoContainer,
       [".todo-item", ".todo-item .finish-icon", ".todo-item p"],
@@ -282,19 +281,15 @@ export default class View {
     );
   }
 
-
   bindDeleteItem(handler, verbose) {
     $delegate(
       this.$todoContainer,
-      [
-        ".todo-item .delete-btn",
-        ".todo-item .delete-btn span",
-      ],
+      [".todo-item .delete-btn", ".todo-item .delete-btn span"],
       "click",
       ({ target }) => {
         // 当前complete状态取反为下一个状态
         handler(_itemId(target));
-        console.log("delete")
+        console.log("delete");
       },
       true,
       !!verbose

@@ -46,9 +46,21 @@ export default class Template {
     }">
   <div class="icon-container"><div class="finish-icon"></div></div>
   <p>${todo.mes}</p>
-  <div class="delete-btn" >
+  <div class="delete-btn btn" >
     <span class="material-icons" >delete</span>
   </div>
+  <div class="change-task-btn-group">
+    <div class="btn-1">
+      <span style="opacity: 1; transition: 0.2s">1</span>
+    </div>
+    <div class="btn-2">
+      <span style="opacity: 1; transition: 0.2s">2</span>
+    </div>
+    <div class="btn-3">
+      <span style="opacity: 1; transition: 0.2s">3</span>
+    </div>
+  </div>
+  
 </div>`;
   }
 }

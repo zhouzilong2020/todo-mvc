@@ -189,30 +189,70 @@ span {
 
 .todo-container .todo-item {
   width: 100%;
-  /* margin-left: 10%; */
   position: relative;
   height: auto;
   border-radius: 10px;
+  
   background-color: rgba(32, 57, 85, 100);
 }
 
-/* delete-btn */
-.todo-container .todo-item .delete-btn {
+.todo-container .todo-item .btn {
   display: flex;
   border-radius: 5px;
   position: absolute;
   top: 0px;
-  right: 0px;
   height: 100%;
-  align-items: center;
-  background-color: red;
 
-  width: 0px;
+  width: 50px;
+  align-items: center;
   justify-content: center;
 }
 
-.todo-container .todo-item .delete-btn span{
+/* delete-btn */
+.todo-container .todo-item .delete-btn {
+  background-color: red;
+  right: -80px;
+}
+
+.todo-container .todo-item .delete-btn span {
   opacity: 0;
+}
+
+.todo-container .todo-item .change-task-btn-group {
+  display: flex;
+  border-radius: 5px;
+  position: absolute;
+  overflow: hidden;
+  height: 100%;
+  top: 0px;
+
+  left: -150px;
+  width: 150px;
+}
+
+.todo-container .todo-item .change-task-btn-group > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+
+.todo-container .todo-item .change-task-btn-group > div > span {
+  font-size: 32px;
+  font-weight: bold;
+}
+
+.todo-container .todo-item .change-task-btn-group .btn-1 {
+  background-color: green;
+}
+
+.todo-container .todo-item .change-task-btn-group .btn-2 {
+  background-color: yellowgreen;
+}
+
+.todo-container .todo-item .change-task-btn-group .btn-3 {
+  background-color: orangered;
 }
 
 .todo-container .todo-item p {
