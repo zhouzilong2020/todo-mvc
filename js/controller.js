@@ -16,7 +16,7 @@ export default class Controller {
     this.view.bindToggleTaskset(this.toggleTaskset.bind(this));
 
     this.view.bindToggleTopbar(this.toggleTopBar.bind(this));
-
+    // this.view.bindToggleTimebar(this.toggleTimeBar.bind(this))
     this.curToggleState = "";
   }
 
@@ -110,7 +110,7 @@ export default class Controller {
       }[state],
       this.view.renderItem.bind(this.view)
     );
-
-    this.store.count(this.view.setStatistic.bind(this.view));
+    this.store.countTaskset(this.view.renderTaskset.bind(this.view));
+    this.store.countTodo(this.view.setStatistic.bind(this.view));
   }
 }

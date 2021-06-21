@@ -68,7 +68,6 @@ export default class View {
       const changeVisibilityIdList = [];
       for (var i = 0, len = todoList.length; i < len; i++) {
         var itemLeftDay = _dueTime(todoList[i]);
-        console.log(itemLeftDay, leftDay);
         if (leftDay === itemLeftDay) {
           // 将该item的display 设置为none
           changeVisibilityIdList.push(todoList[i]);
@@ -78,18 +77,11 @@ export default class View {
       this.setTodoItemVisibility(changeVisibilityIdList);
     });
 
-    // this.bindToggleTopbar((toggleId) => {
-    //   this.toggleTopBar(toggleId);
-    // });
-
-    // TODO 怎么存储？
-    this.bindAddNewTodo(() => {});
-
     // 如何添加截止日期？
     // const date = this.$inputBar.querySelector(".date-selector");
     // console.log(date.click());
   }
-  
+
   /**
    * 绑定顶部toggle
    * @param {function} handler handle function
@@ -138,7 +130,11 @@ export default class View {
         const mes = this.$input.value;
         const curTaskset = _activeTasksetId(this.$tasksetList.children);
 
-        if (curTaskset.length > 1 || curTaskset.length <= 0) {
+        if (
+          curTaskset.length > 1 ||
+          curTaskset.length <= 0 ||
+          mes.length == 0
+        ) {
           // 仅能有一个在这里！
           alert(
             "A task can only be added to one taskset, please toggle one taskset and try again!"
@@ -300,6 +296,7 @@ export default class View {
    * @param {TasksetList} tasksetList
    */
   renderTaskset(tasksetList) {
+    this.$tasksetList.innerHTML = "";
     tasksetList.reduce((pre, cur) => {
       cur.leftCnt = 0;
       // 统计每一个任务集合中未完成的数量

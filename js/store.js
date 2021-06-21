@@ -277,7 +277,7 @@ export default class Store {
    *
    * @param {function(number, number, number)} callback total, left, completed
    */
-  count(callback) {
+  countTodo(callback) {
     const allTodo = _todoList(this.getLocalStorage());
     const total = allTodo.length;
     let i = total;
@@ -287,5 +287,9 @@ export default class Store {
     }
     //console.log(completed);
     callback(total, total - completed, completed);
+  }
+
+  countTaskset(callback) {
+    callback(this.getLocalStorage());
   }
 }
