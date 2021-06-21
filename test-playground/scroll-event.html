@@ -5,54 +5,39 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <link rel="stylesheet" href="../style.css" />
   </head>
   <body>
-    <div
-      data-id="1"
-      id="container"
-      style="
-        background-color: green;
-        transition: 0.2s;
-        width: 80%;
-        height: 100px;
-        margin: 0 auto;
-        position: relative;
-        overflow: hidden;
-      "
-    >
-      <div
-        data-id="3"
-        style="
-          display: block;
-          background-color: blue;
-          transition: 0.2s;
-          width: 80%;
-
-          position: absolute;
-        "
-      >
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto, a
-        exercitationem? Eos, natus! Accusamus, recusandae quo! Reiciendis
-        veritatis soluta a, error quis maiores hic, et aspernatur labore itaque
-        vel minus?
+    <div class="todo-container">
+      <div class="todo-item completed" style="position: relative">
+        <div class="icon-container"><div class="finish-icon"></div></div>
+        <p>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit.
+          Distinctioipsam ex voluptatum numquam sit. Nihil odio sapiente dolor
+          error quasi dolorem, totam assumenda laudantium? Non modi eius
+          recusandae assumenda beatae.
+        </p>
+        <div
+          class="btn-group"
+          style="
+            transition: 0.4s;
+            display: block;
+            border-radius: 5px;
+            position: absolute;
+            top: 0px;
+            right: 0px;
+            width: 0px;
+            height: 100%;
+            background-color: red;
+          "
+        ></div>
       </div>
-      <div
-        data-id="2"
-        style="
-          transition: 0.2s;
-          display: block;
-          background-color: black;
-          height: 100%;
-          position: absolute;
-          right: 0;
-        "
-      ></div>
     </div>
 
     <script>
-      const div = document.querySelector("#container");
-      const btn = document.querySelector("div [data-id='2']");
-      const content = document.querySelector("div [data-id='3']");
+      const div = document.querySelector(".todo-container");
+      const btn = document.querySelector(".btn-group");
+      const content = document.querySelector(".todo-item");
 
       var startX;
       const maxWidth = "100";
@@ -62,25 +47,26 @@
         const id = event.target.dataset.id;
         const touchStart = event.changedTouches[0];
         startX = touchStart.clientX;
+
         console.log([`id:${id}\n`, `startX:${startX}`].join(" "));
       });
 
       div.addEventListener("touchmove", (event) => {
-        event.stopPropagation();
+        const id = event.target.dataset.id;
+
         let diffX = Math.max(
           0,
           Math.min(startX - event.changedTouches[0].clientX, maxWidth)
         );
 
-        content.style.left = -diffX + "px";
-
-        const id = event.target.dataset.id;
-
+        content.style.left = `${-diffX}px`;
+        btn.style.right = `${-diffX}px`;
         btn.style.width = `${diffX}px`;
+
+        event.stopPropagation();
       });
 
       div.addEventListener("touchend", (event) => {
-        event.stopPropagation();
         const id = event.target.dataset.id;
         let diffX = Math.max(
           0,
@@ -92,9 +78,11 @@
           diffX = 0;
         }
 
-        content.style.left = -diffX + "px";
-
+        content.style.left = `${-diffX}px`;
+        btn.style.right = `${-diffX}px`;
         btn.style.width = `${diffX}px`;
+        event.stopPropagation();
+
         console.log([`id:${id}\n`, `diffX:${diffX}`].join(" "));
       });
     </script>

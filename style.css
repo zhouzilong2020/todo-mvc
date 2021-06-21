@@ -194,7 +194,7 @@ span {
   border-radius: 10px;
   background-color: rgba(32, 57, 85, 100);
 
-  transition: 0.2s;
+  transition: 0.4s;
 }
 .todo-container .todo-item p {
   vertical-align: middle;
