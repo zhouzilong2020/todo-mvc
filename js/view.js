@@ -23,9 +23,6 @@ const _complete = (element) =>
   element.classList.contains("completed") ||
   element.parentNode.classList.contains("completed");
 
-const _dueTime = (element) =>
-  parseInt(element.dataset.due || element.parentNode.dataset.due, 10);
-
 const _toggleId = (element) =>
   element.dataset.id ||
   element.parentNode.dataset.id ||
@@ -42,6 +39,10 @@ const _activeTasksetId = (eleList) => {
   return result;
 };
 const _clientX = (event) => event.changedTouches[0].clientX;
+
+const _hide = (element) =>
+  element.classList.contains("hide") ||
+  element.parentNode.classList.contains("hide");
 
 const rBtnExpandWidth = 80;
 const lBtnExpandWidth = 180;
@@ -72,6 +73,33 @@ export default class View {
     // 记录是否第二次仍然滑动的是同一个方块，如果是，则需要额外逻辑判断
     this.isRepeteScroll = false;
     this.extraWidthForSecondScroll = 0;
+  }
+
+  changeHideBtn(hide) {
+    const hideBtnIcon = this.$functionBar.querySelector(".hide-btn span");
+    const hideBtn = this.$functionBar.querySelector(".hide-btn");
+    if (!hide) {
+      hideBtn.classList.remove("hide");
+      hideBtnIcon.innerText = "expand_less";
+    } else {
+      hideBtn.classList.add("hide");
+      hideBtnIcon.innerText = "expand_more";
+    }
+  }
+
+  bindToggleAllHide(handler) {
+    $delegate(
+      this.$functionBar,
+      [".function-bar .hide-btn", ".function-bar .hide-btn span"],
+      "click",
+      ({ target }) => {
+        // 与上一个状态取反
+        // console.log(target);
+        // console.log(_hide(target));
+        handler(!_hide(target));
+      },
+      true
+    );
   }
 
   bindDeleteAllComplete(handler) {

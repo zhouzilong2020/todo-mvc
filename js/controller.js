@@ -22,7 +22,46 @@ export default class Controller {
     this.view.bindChangeItemTaskset(this.changeItemTaskset.bind(this));
     this.view.bindToggleTimebar(this.toggleItemHide.bind(this));
     this.view.bindDeleteAllComplete(this.deleteAllComplete.bind(this));
+    this.view.bindToggleAllHide(this.toggleAllHide.bind(this));
+
     this.curToggleState = "";
+  }
+
+  /**
+   * 收起/展开所有item
+   * @param {boolean} hide
+   */
+  toggleAllHide(hide) {
+    this.view.changeHideBtn(hide);
+    const state = this.curToggleState;
+    this.store.find(
+      {
+        "": emptyItemQuery,
+        total: emptyItemQuery,
+        done: { completed: true },
+        left: { completed: false },
+      }[state],
+      (todoList) => {
+        const updateList = todoList.reduce((pre, cur) => {
+          pre.push({
+            id: cur.id,
+            hide,
+          });
+          return pre;
+        }, []);
+        
+        let samephore = updateList.length;
+        updateList.forEach((cur) => {
+          this.store.update(cur, () => {
+            samephore--;
+            if (samephore === 0) {
+              this.view.clearScroll();
+              this._filter();
+            }
+          });
+        });
+      }
+    );
   }
 
   deleteAllComplete() {

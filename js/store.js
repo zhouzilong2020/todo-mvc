@@ -151,7 +151,7 @@ export default class Store {
     let i = tasksetList.length;
     let k;
 
-    console.log(update);
+    // console.log(update);
 
     while (i--) {
       const todoList = tasksetList[i].todoList;
