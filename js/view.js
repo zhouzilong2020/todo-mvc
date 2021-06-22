@@ -140,7 +140,12 @@ export default class View {
     this.$lastScrollBtnR.style.right = `${-rBtnMoveX}px`;
     this.$lastScrollBtnR.style.width = `${rBtnMoveX}px`;
 
-    const lBtnMoveX = Math.max(Math.min(0, diffX), -lBtnExpandWidth);
+    // 指数衰减效果，如果已经达到了最大的右滑动距离，仍然可以向右滑动一小段距离
+    let lBtnMoveX = Math.max(Math.min(0, diffX), -lBtnExpandWidth);
+    if (diffX < -lBtnExpandWidth) {
+      // 滑动衰减效果
+      lBtnMoveX -= Math.log10(1 - diffX / lBtnExpandWidth) * 40;
+    }
     this.$lastScrollBtnL.style.left = `${lBtnMoveX}px`;
     this.$lastScrollBtnL.style.width = `${-lBtnMoveX}px`;
 
