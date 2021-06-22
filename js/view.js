@@ -45,8 +45,10 @@ const _hide = (element) =>
   element.classList.contains("hide") ||
   element.parentNode.classList.contains("hide");
 
-const rBtnExpandWidth = 80;
+const rBtnExpandWidth = 120;
 const lBtnExpandWidth = 180;
+
+const deleteWidth = 250;
 
 export default class View {
   /**
@@ -128,7 +130,7 @@ export default class View {
         `[data-id="${id}"]`
       );
       this.$lastScrollBtnR = this.$todoContainer.querySelector(
-        `[data-id="${id}"] .delete-btn`
+        `[data-id="${id}"] .function-btn-group`
       );
       this.$lastScrollBtnL = this.$todoContainer.querySelector(
         `[data-id="${id}"] .change-task-btn-group`
@@ -158,6 +160,27 @@ export default class View {
   }
 
   /**
+   * 绑定修改todo
+   * @param {function} handler
+   * @param {boolean} verbose
+   */
+  bindEditItem(handler, verbose) {
+    $delegate(
+      this.$todoContainer,
+      [
+        ".todo-item .function-btn-group .delete-btn",
+        ".todo-item .function-btn-group .delete-btn span",
+      ],
+      "click",
+      ({ target }) => {
+        handler(_itemId(target));
+      },
+      true,
+      !!verbose
+    );
+  }
+
+  /**
    * 绑定切换todo的任务集合
    * @param {function} handler
    * @param {boolean} verbose
@@ -166,7 +189,6 @@ export default class View {
     $delegate(
       this.$todoContainer,
       [
-        ".todo-item .change-task-btn-group",
         ".todo-item .change-task-btn-group div",
         ".todo-item .change-task-btn-group div span",
       ],
@@ -196,7 +218,6 @@ export default class View {
     this.$lastScrollBtnR.style.transition = sec;
     this.$lastScrollBtnL.style.transition = sec;
     this.$lastScrollCtx.style.transition = sec;
-    this.$lastScrollBtnR.firstElementChild.style.transition = sec;
   }
 
   /**
@@ -224,17 +245,16 @@ export default class View {
       this.$lastScrollCtx.style.left = `${-lBtnMoveX}px`;
     }
 
-    // 判断右边按钮是否需要进行展开
-    if (rBtnMoveX >= 0.618 * rBtnExpandWidth) {
-      this.$lastScrollBtnR.firstElementChild.setAttribute(
-        "style",
-        `font-size:24px;opacity:1 `
-      );
+    const editBtn = this.$lastScrollBtnR.querySelector(".edit-btn");
+    //达到右滑动删除临界点！
+    if (rBtnMoveX >= deleteWidth) {
+      editBtn.style.transition = "0.2s";
+      setTimeout(() => {
+        editBtn.style.width = "50px";
+        editBtn.style.transition = "0";
+      }, 20);
     } else {
-      this.$lastScrollBtnR.firstElementChild.setAttribute(
-        "style",
-        `font-size:0px;opacity:0 `
-      );
+      editBtn.style.width = "100%";
     }
   }
 
@@ -244,8 +264,17 @@ export default class View {
    */
   setContent(diffX) {
     this.setTransition("0.6s");
-    if (rBtnExpandWidth * 4 < diffX) {
-      this.$lastScrollBtnR.click();
+
+    const editBtn = this.$lastScrollBtnR.querySelector(".edit-btn");
+    const deleteBtn = this.$lastScrollBtnR.querySelector(".delete-btn");
+
+    //达到右滑动删除临界点！
+    if (diffX < deleteWidth) {
+      editBtn.style.width = "100%";
+    }
+
+    if (deleteWidth < diffX) {
+      deleteBtn.click();
     } else if (rBtnExpandWidth * 0.618 <= diffX) {
       // 左滑动, 大于按钮的0.618时候认为全部展开
       this.extraWidthForSecondScroll = rBtnExpandWidth;
@@ -415,7 +444,10 @@ export default class View {
   bindDeleteItem(handler, verbose) {
     $delegate(
       this.$todoContainer,
-      [".todo-item .delete-btn", ".todo-item .delete-btn span"],
+      [
+        ".todo-item .function-btn-group .delete-btn",
+        ".todo-item .function-btn-group .delete-btn span",
+      ],
       "click",
       ({ target }) => {
         // 当前complete状态取反为下一个状态
