@@ -27,8 +27,14 @@ export default class Controller {
     this.curToggleState = "";
   }
 
-  editItem(id) {
-    console.log(id);
+  editItem(id, curText) {
+    this.view.editItem(curText, (newText) => {
+      console.log(newText)
+      this.store.update({ id, mes: newText }, () => {
+        this.view.clearScroll();
+        this._filter();
+      });
+    });
     
   }
 
@@ -129,8 +135,14 @@ export default class Controller {
     this._filter();
   }
 
+  /**
+   * 删除一条记录
+   *
+   * @param {!number} id
+   */
   deleteItem(id) {
     this.store.remove({ id }, () => {
+      // FIXME可以直接从view删除 不需要重新访存
       this._filter();
     });
   }
@@ -169,17 +181,6 @@ export default class Controller {
         this._filter();
       }
     );
-  }
-
-  /**
-   * 删除一条记录
-   *
-   * @param {!number} id
-   */
-  removeItem(id) {
-    this.store.remove({ id }, () => {
-      this.view.removeItem(id);
-    });
   }
 
   /**

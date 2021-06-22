@@ -1,4 +1,4 @@
-import { qs, $delegate, $on } from "./helper.js";
+import { qs, $delegate, $on, $noMore } from "./helper.js";
 import "./dateUtils.js";
 import { TasksetList, TodoList } from "./item.js";
 
@@ -45,6 +45,13 @@ const _hide = (element) =>
   element.classList.contains("hide") ||
   element.parentNode.classList.contains("hide");
 
+const _text = (element) => {
+  const pNode =
+    element.parentNode.parentNode.querySelector("p") ||
+    element.parentNode.parentNode.parentNode.querySelector("p");
+  return pNode.innerText;
+};
+
 const rBtnExpandWidth = 120;
 const lBtnExpandWidth = 180;
 
@@ -90,6 +97,16 @@ export default class View {
     }
   }
 
+  
+  editItem(curText, handler) {
+    const newText = prompt("please change your task here", curText);
+    handler(newText);
+  }
+
+  enableDeleteOnAdd() {}
+
+  enableDeleteOnAdd() {}
+
   bindToggleAllHide(handler) {
     $delegate(
       this.$functionBar,
@@ -97,8 +114,6 @@ export default class View {
       "click",
       ({ target }) => {
         // 与上一个状态取反
-        // console.log(target);
-        // console.log(_hide(target));
         handler(!_hide(target));
       },
       true
@@ -173,7 +188,7 @@ export default class View {
       ],
       "click",
       ({ target }) => {
-        handler(_itemId(target));
+        handler(_itemId(target), _text(target));
       },
       true,
       !!verbose
