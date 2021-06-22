@@ -46,7 +46,6 @@ body {
   background-color: rgba(240, 240, 240, 0.8);
 }
 
-
 .toggle .toggle-item {
   box-sizing: border-box;
   height: 60px;
@@ -173,6 +172,7 @@ body {
 .todo-container .time-bar span {
   line-height: 32px;
   display: inline-block;
+  color: whitesmoke;
   line-height: 32px;
 }
 .todo-container .time-bar .date {
