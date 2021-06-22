@@ -258,6 +258,7 @@ body {
 }
 
 .todo-container .todo-item .change-task-btn-group > div > span {
+  color: aliceblue;
   font-size: 32px;
 }
 
