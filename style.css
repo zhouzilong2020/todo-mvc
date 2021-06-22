@@ -1,5 +1,5 @@
 /* 全局样式 */
-@import "../node_modules/material-design-icons/iconfont/material-icons.css";
+@import "./iconfont/material-icons.css";
 body {
   display: grid;
   row-gap: 8px;
@@ -172,7 +172,7 @@ body {
 .todo-container .time-bar span {
   line-height: 32px;
   display: inline-block;
-  color: whitesmoke;
+  color: white;
   line-height: 32px;
 }
 .todo-container .time-bar .date {
