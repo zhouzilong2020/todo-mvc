@@ -17,17 +17,20 @@ export default class Controller {
     this.view.bindToggleItemComplete(this.toggleItemCompleted.bind(this));
     this.view.bindAddNewTodo(this.addItem.bind(this));
     this.view.bindToggleTaskset(this.toggleTaskset.bind(this));
-
     this.view.bindToggleTopbar(this.toggleTopBar.bind(this));
     this.view.bindDeleteItem(this.deleteItem.bind(this));
     this.view.bindChangeItemTaskset(this.changeItemTaskset.bind(this));
-    // TODO 修改这个
     this.view.bindToggleTimebar(this.toggleItemHide.bind(this));
-
+    this.view.bindDeleteAllComplete(this.deleteAllComplete.bind(this));
     this.curToggleState = "";
   }
 
-  // TODO 修改数据库
+  deleteAllComplete() {
+    this.store.remove({ completed: true }, () => {
+      this._filter();
+    });
+  }
+
   toggleItemHide(leftDay) {
     const state = this.curToggleState;
     this.store.find(

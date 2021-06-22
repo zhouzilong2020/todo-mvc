@@ -62,6 +62,8 @@ export default class View {
     this.$todoContainer = qs(".todo-container");
     this.$tasksetList = qs(".taskset-list");
 
+    this.$functionBar = qs(".function-bar");
+
     this.$lastScrollCtx = null;
     this.$lastScrollBtnR = null;
     this.$lastScrollBtnL = null;
@@ -70,6 +72,18 @@ export default class View {
     // 记录是否第二次仍然滑动的是同一个方块，如果是，则需要额外逻辑判断
     this.isRepeteScroll = false;
     this.extraWidthForSecondScroll = 0;
+  }
+
+  bindDeleteAllComplete(handler) {
+    $delegate(
+      this.$functionBar,
+      [".function-bar .delete-btn", ".function-bar .delete-btn span"],
+      "click",
+      ({ target }) => {
+        handler();
+      },
+      true
+    );
   }
 
   // 初始化绑定操作
