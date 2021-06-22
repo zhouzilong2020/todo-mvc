@@ -49,7 +49,7 @@ export default class Controller {
           });
           return pre;
         }, []);
-        
+
         let samephore = updateList.length;
         updateList.forEach((cur) => {
           this.store.update(cur, () => {

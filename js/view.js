@@ -12,8 +12,9 @@ const _itemId = (element) =>
     10
   );
 
+// FIXME
 const _toTasksetId = (element) =>
-  (element.classList[0] || element.parentNode.classList[0])[4];
+  element.parentNode.dataset.tasksetid || element.dataset.tasksetid;
 
 const _active = (element) =>
   element.classList.contains("active") ||
@@ -171,6 +172,8 @@ export default class View {
       ],
       "click",
       ({ target }) => {
+        console.log(target);
+        console.log(_toTasksetId(target));
         handler(_itemId(target), _toTasksetId(target));
       },
       true,
@@ -515,9 +518,12 @@ export default class View {
     //  2. 未完成优先
     //  3. 后添加的优先
 
+    //  1. due 少的优先
     todoList.sort((a, b) => {
       return a.due.LeftDay() - b.due.LeftDay();
     });
+    //  TODO 2.未完成的优先
+    //  TODO 3. 后添加的优先
 
     todoList.reduce(
       (pre, cur) => {

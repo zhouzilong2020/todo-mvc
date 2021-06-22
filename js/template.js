@@ -50,13 +50,13 @@ export default class Template {
     <span class="material-icons" >delete</span>
   </div>
   <div class="change-task-btn-group">
-    <div class="btn-1">
+    <div data-tasksetId="1" class="btn-1">
       <span class="material-icons" style="opacity: 1; transition: 0.2s">sentiment_very_satisfied</span>
     </div>
-    <div class="btn-2">
+    <div  data-tasksetId="2" class="btn-2">
       <span  class="material-icons" style="opacity: 1; transition: 0.2s">sentiment_satisfied</span>
     </div>
-    <div class="btn-3">
+    <div data-tasksetId="3" class="btn-3">
       <span  class="material-icons" style="opacity: 1; transition: 0.2s">sentiment_very_dissatisfied</span>
     </div>
   </div>
