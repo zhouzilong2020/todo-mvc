@@ -79,19 +79,19 @@ export default class Store {
       this.setLocalStorage([
         {
           id: 1,
-          name: "todo-list1",
+          name: "Tranquil",
           active: true,
           todoList: [],
         },
         {
           id: 2,
-          name: "todo-list2",
+          name: "Urgent",
           active: false,
           todoList: [],
         },
         {
           id: 3,
-          name: "todo-list3",
+          name: "Oh NO",
           active: false,
           todoList: [],
         },

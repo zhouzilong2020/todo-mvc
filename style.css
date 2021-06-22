@@ -217,6 +217,7 @@ span {
 .todo-container .todo-item .delete-btn span {
   font-size: 0px;
   opacity: 0;
+  color: whitesmoke;
 }
 
 .todo-container .todo-item .change-task-btn-group {
@@ -240,7 +241,6 @@ span {
 
 .todo-container .todo-item .change-task-btn-group > div > span {
   font-size: 32px;
-  font-weight: bold;
 }
 
 .todo-container .todo-item .change-task-btn-group .btn-1 {

@@ -195,10 +195,15 @@ export default class View {
 
     // 判断右边按钮是否需要进行展开
     if (rBtnMoveX >= 0.618 * rBtnExpandWidth) {
-      this.$lastScrollBtnR.firstElementChild.style.opacity = "1";
+      this.$lastScrollBtnR.firstElementChild.setAttribute(
+        "style",
+        `font-size:24px;opacity:1 `
+      );
     } else {
-      // this.$lastScrollBtnR.firstElementChild.style.fontsize = "0";
-      this.$lastScrollBtnR.firstElementChild.style.opacity = "0";
+      this.$lastScrollBtnR.firstElementChild.setAttribute(
+        "style",
+        `font-size:0px;opacity:0 `
+      );
     }
   }
 
@@ -209,7 +214,7 @@ export default class View {
   setContent(diffX) {
     this.setTransition("0.6s");
     // TODO 左滑大于一定距离直接删除 直接删掉该条记录
-    if (rBtnExpandWidth * 3 < diffX) {
+    if (rBtnExpandWidth * 4 < diffX) {
       this.$lastScrollBtnR.click();
     } else if (rBtnExpandWidth * 0.618 <= diffX) {
       // 左滑动, 大于按钮的0.618时候认为全部展开

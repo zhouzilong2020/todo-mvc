@@ -51,13 +51,13 @@ export default class Template {
   </div>
   <div class="change-task-btn-group">
     <div class="btn-1">
-      <span style="opacity: 1; transition: 0.2s">1</span>
+      <span class="material-icons" style="opacity: 1; transition: 0.2s">sentiment_very_satisfied</span>
     </div>
     <div class="btn-2">
-      <span style="opacity: 1; transition: 0.2s">2</span>
+      <span  class="material-icons" style="opacity: 1; transition: 0.2s">sentiment_satisfied</span>
     </div>
     <div class="btn-3">
-      <span style="opacity: 1; transition: 0.2s">3</span>
+      <span  class="material-icons" style="opacity: 1; transition: 0.2s">sentiment_very_dissatisfied</span>
     </div>
   </div>
   
