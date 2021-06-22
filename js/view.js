@@ -74,19 +74,6 @@ export default class View {
 
   // 初始化绑定操作
   init() {
-    this.bindToggleTimebar((leftDay) => {
-      const todoList = this.$todoContainer.querySelectorAll(".todo-item");
-      const changeVisibilityIdList = [];
-      for (var i = 0, len = todoList.length; i < len; i++) {
-        var itemLeftDay = _dueTime(todoList[i]);
-        if (leftDay === itemLeftDay) {
-          // 将该item的display 设置为none
-          changeVisibilityIdList.push(todoList[i]);
-        }
-      }
-      this.setTodoItemVisibility(changeVisibilityIdList);
-    });
-
     this.bindTouchStart((id, startX) => {
       if (!!this.$lastScrollCtx) {
         this.isRepeteScroll = id == this.$lastScrollCtx.dataset.id;
@@ -108,7 +95,6 @@ export default class View {
       this.startX = startX;
     });
 
-    // TODO 滑动大于一定数值直接删除
     this.bindTouchMove((movingX) => {
       let diffX = this.startX - movingX;
       // 第二次滑动同一个滑块，并且当前滑块状态为按钮展开了
@@ -213,7 +199,6 @@ export default class View {
    */
   setContent(diffX) {
     this.setTransition("0.6s");
-    // TODO 左滑大于一定距离直接删除 直接删掉该条记录
     if (rBtnExpandWidth * 4 < diffX) {
       this.$lastScrollBtnR.click();
     } else if (rBtnExpandWidth * 0.618 <= diffX) {
@@ -447,22 +432,6 @@ export default class View {
       tasksetItem.classList.remove("active");
     } else {
       tasksetItem.classList.add("active");
-    }
-  }
-
-  /**
-   * 将剩余日期等于这个数值的全部隐藏
-   *
-   * @param {HTMLElement} eleList
-   */
-  setTodoItemVisibility(eleList) {
-    let i = eleList.length;
-    while (i--) {
-      if (eleList[i].classList.contains("hide")) {
-        eleList[i].classList.remove("hide");
-      } else {
-        eleList[i].classList.add("hide");
-      }
     }
   }
 

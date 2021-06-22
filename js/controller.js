@@ -2,6 +2,9 @@ import View from "./view.js";
 import Store from "./store.js";
 import { emptyItemQuery } from "./item.js";
 
+const _dueTime = (element) =>
+  parseInt(element.dataset.due || element.parentNode.dataset.due, 10);
+
 export default class Controller {
   /**
    * @param  {!Store} store A Store instance
@@ -17,9 +20,46 @@ export default class Controller {
 
     this.view.bindToggleTopbar(this.toggleTopBar.bind(this));
     this.view.bindDeleteItem(this.deleteItem.bind(this));
-    // this.view.bindToggleTimebar(this.toggleTimeBar.bind(this))
     this.view.bindChangeItemTaskset(this.changeItemTaskset.bind(this));
+    // TODO 修改这个
+    this.view.bindToggleTimebar(this.toggleItemHide.bind(this));
+
     this.curToggleState = "";
+  }
+
+  // TODO 修改数据库
+  toggleItemHide(leftDay) {
+    const state = this.curToggleState;
+    this.store.find(
+      {
+        "": emptyItemQuery,
+        total: emptyItemQuery,
+        done: { completed: true },
+        left: { completed: false },
+      }[state],
+      (todoList) => {
+        const updateList = todoList.reduce((pre, cur) => {
+          if (cur.due.LeftDay() === leftDay) {
+            pre.push({
+              id: cur.id,
+              hide: !!!cur.hide,
+            });
+          }
+          return pre;
+        }, []);
+        // console.log(updateList)
+        let samephore = updateList.length;
+        updateList.forEach((cur) => {
+          this.store.update(cur, () => {
+            samephore--;
+            if (samephore === 0) {
+              this.view.clearScroll();
+              this._filter();
+            }
+          });
+        });
+      }
+    );
   }
 
   init() {
@@ -31,7 +71,7 @@ export default class Controller {
   changeItemTaskset(id, tasksetId) {
     this.store.update({ id, tasksetId }, () => {
       this.view.clearScroll();
-      this._filter(true);
+      this._filter();
     });
   }
 
