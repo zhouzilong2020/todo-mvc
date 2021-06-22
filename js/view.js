@@ -7,9 +7,13 @@ const _itemId = (element) =>
   parseInt(
     element.dataset.id ||
       element.parentNode.dataset.id ||
-      element.parentNode.parentNode.dataset.id,
+      element.parentNode.parentNode.dataset.id ||
+      element.parentNode.parentNode.parentNode.dataset.id,
     10
   );
+
+const _toTasksetId = (element) =>
+  (element.classList[0] || element.parentNode.classList[0])[4];
 
 const _active = (element) =>
   element.classList.contains("active") ||
@@ -124,10 +128,39 @@ export default class View {
     });
   }
 
+  /**
+   * 绑定切换todo的任务集合
+   * @param {function} handler
+   * @param {boolean} verbose
+   */
+   bindChangeItemTaskset(handler, verbose) {
+    $delegate(
+      this.$todoContainer,
+      [
+        ".todo-item .change-task-btn-group",
+        ".todo-item .change-task-btn-group div",
+        ".todo-item .change-task-btn-group div span",
+      ],
+      "click",
+      ({ target }) => {
+        handler(_itemId(target), _toTasksetId(target));
+      },
+      true,
+      !!verbose
+    );
+  }
+
+  /**
+   * 清空当前记录的滑动信息
+   */
   clearScroll() {
     this.$lastScrollCtx = null;
   }
 
+  /**
+   * 为所有滑动元素添加transition
+   * @param {string} sec
+   */
   setTransition(sec) {
     this.$lastScrollBtnR.style.transition = sec;
     this.$lastScrollBtnL.style.transition = sec;
@@ -135,6 +168,10 @@ export default class View {
     this.$lastScrollBtnR.firstElementChild.style.transition = sec;
   }
 
+  /**
+   * 将元素滑动某一个距离
+   * @param {number} diffX
+   */
   moveElement(diffX) {
     const rBtnMoveX = Math.max(0, diffX);
     this.$lastScrollBtnR.style.right = `${-rBtnMoveX}px`;
@@ -165,6 +202,10 @@ export default class View {
     }
   }
 
+  /**
+   * 滑动结束时，判断最终的滑动效果
+   * @param {number} diffX
+   */
   setContent(diffX) {
     this.setTransition("0.6s");
     // TODO 左滑大于一定距离直接删除 直接删掉该条记录
@@ -183,6 +224,11 @@ export default class View {
     this.moveElement(diffX);
   }
 
+  /**
+   * 绑定滑动开始事件
+   * @param {function} handler
+   * @param {boolean} verbose
+   */
   bindTouchStart(handler, verbose) {
     $delegate(
       this.$todoContainer,
@@ -196,6 +242,11 @@ export default class View {
     );
   }
 
+  /**
+   * 绑定滑动进行事件
+   * @param {function} handler
+   * @param {boolean} verbose
+   */
   bindTouchMove(handler, verbose) {
     $delegate(
       this.$todoContainer,
@@ -209,6 +260,11 @@ export default class View {
     );
   }
 
+  /**
+   * 绑定滑动结束事件
+   * @param {function} handler
+   * @param {boolean} verbose
+   */
   bindTouchEnd(handler, verbose) {
     $delegate(
       this.$todoContainer,
@@ -314,6 +370,11 @@ export default class View {
     );
   }
 
+  /**
+   * 绑定删除todo item
+   * @param {function} handler
+   * @param {boolean} verbose
+   */
   bindDeleteItem(handler, verbose) {
     $delegate(
       this.$todoContainer,
@@ -464,6 +525,10 @@ export default class View {
     }, 0);
   }
 
+  /**
+   * 进行数据统计
+   * @param {TodoList} todoList
+   */
   setTasksetStatistic(todoList) {
     const cnt = {};
     todoList.reduce((pre, cur) => {
@@ -488,6 +553,12 @@ export default class View {
     }
   }
 
+  /**
+   * 进行数据统计
+   * @param {number} total
+   * @param {number} left
+   * @param {number} done
+   */
   setStatistic(total, left, done) {
     this.$leftCnt.innerText = left;
     this.$doneCnt.innerText = done;

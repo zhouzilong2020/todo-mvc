@@ -18,6 +18,7 @@ export default class Controller {
     this.view.bindToggleTopbar(this.toggleTopBar.bind(this));
     this.view.bindDeleteItem(this.deleteItem.bind(this));
     // this.view.bindToggleTimebar(this.toggleTimeBar.bind(this))
+    this.view.bindChangeItemTaskset(this.changeItemTaskset.bind(this));
     this.curToggleState = "";
   }
 
@@ -25,6 +26,13 @@ export default class Controller {
     this.view.init();
     this.store.init(this.view.renderTaskset.bind(this.view));
     this._filter();
+  }
+
+  changeItemTaskset(id, tasksetId) {
+    this.store.update({ id, tasksetId }, () => {
+      this.view.clearScroll();
+      this._filter(true);
+    });
   }
 
   toggleTopBar(toggleId) {
@@ -103,8 +111,9 @@ export default class Controller {
   /**
    * 根据当前页面状态重新查找数据进行渲染
    * TODO 增量式渲染
+   * @param {!boolean} 强制刷新
    */
-  _filter() {
+  _filter(force) {
     const state = this.curToggleState;
     // if (
     //   force ||
@@ -119,11 +128,13 @@ export default class Controller {
         left: { completed: false },
       }[state],
       (res) => {
+        console.log(res)
         this.view.renderItem.call(this.view, res);
         this.view.setTasksetStatistic.call(this.view, res);
       }
     );
 
+    // 全局任务清单
     this.store.countTodo(this.view.setStatistic.bind(this.view));
   }
 }

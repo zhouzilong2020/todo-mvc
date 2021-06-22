@@ -151,6 +151,8 @@ export default class Store {
     let i = tasksetList.length;
     let k;
 
+    console.log(update);
+
     while (i--) {
       const todoList = tasksetList[i].todoList;
       let j = todoList.length;
@@ -176,11 +178,13 @@ export default class Store {
         break;
       }
     }
+    console.log(toBeUpdated);
 
     // 将taskset跟新的todo插入到新任务集合中
     if (update.hasOwnProperty("tasksetId")) {
+      i = tasksetList.length;
       while (i--) {
-        if (tasksetList[i].id === toBeUpdated.tasksetId) {
+        if (tasksetList[i].id == toBeUpdated.tasksetId) {
           tasksetList[i].todoList.push(toBeUpdated);
           break;
         }
