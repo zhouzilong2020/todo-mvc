@@ -133,7 +133,7 @@ export default class View {
    * @param {function} handler
    * @param {boolean} verbose
    */
-   bindChangeItemTaskset(handler, verbose) {
+  bindChangeItemTaskset(handler, verbose) {
     $delegate(
       this.$todoContainer,
       [
@@ -209,7 +209,9 @@ export default class View {
   setContent(diffX) {
     this.setTransition("0.6s");
     // TODO 左滑大于一定距离直接删除 直接删掉该条记录
-    if (rBtnExpandWidth * 0.618 <= diffX) {
+    if (rBtnExpandWidth * 3 < diffX) {
+      this.$lastScrollBtnR.click();
+    } else if (rBtnExpandWidth * 0.618 <= diffX) {
       // 左滑动, 大于按钮的0.618时候认为全部展开
       this.extraWidthForSecondScroll = rBtnExpandWidth;
       diffX = rBtnExpandWidth;
@@ -362,7 +364,7 @@ export default class View {
       "click",
       ({ target }) => {
         // 当前complete状态取反为下一个状态
-        console.log(_itemId(target));
+        //console.log(_itemId(target));
         handler(_itemId(target), !_complete(target));
       },
       true,
@@ -383,7 +385,7 @@ export default class View {
       ({ target }) => {
         // 当前complete状态取反为下一个状态
         handler(_itemId(target));
-        console.log("delete");
+        //console.log("delete");
       },
       true,
       !!verbose
@@ -465,9 +467,9 @@ export default class View {
    * @param {!number} id Item ID
    */
   toggleItemCompleted(id) {
-    console.log("view", id);
+    //console.log("view", id);
     const listItem = this.$todoContainer.querySelector(`[data-id="${id}"]`);
-    console.log(listItem);
+    //console.log(listItem);
     if (!listItem) {
       return;
     }

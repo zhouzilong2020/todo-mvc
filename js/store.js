@@ -151,7 +151,7 @@ export default class Store {
     let i = tasksetList.length;
     let k;
 
-    console.log(update);
+    //console.log(update);
 
     while (i--) {
       const todoList = tasksetList[i].todoList;
@@ -178,7 +178,7 @@ export default class Store {
         break;
       }
     }
-    console.log(toBeUpdated);
+    //console.log(toBeUpdated);
 
     // 将taskset跟新的todo插入到新任务集合中
     if (update.hasOwnProperty("tasksetId")) {
@@ -261,9 +261,9 @@ export default class Store {
       let j = todoList.length;
       // 遍历当前任务集中的todolist
       while (j--) {
-        console.log(j);
+        //console.log(j);
         for (k in query) {
-          console.log(query[k], todoList[j][k]);
+          //console.log(query[k], todoList[j][k]);
           if (query[k] === todoList[j][k]) {
             // 更新todoList
             todoList.splice(j, 1);
