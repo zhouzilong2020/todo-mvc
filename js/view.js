@@ -83,10 +83,10 @@ export default class View {
     const hideBtn = this.$functionBar.querySelector(".hide-btn");
     if (!hide) {
       hideBtn.classList.remove("hide");
-      hideBtnIcon.innerText = "expand_less";
+      hideBtnIcon.innerText = "expand_more";
     } else {
       hideBtn.classList.add("hide");
-      hideBtnIcon.innerText = "expand_more";
+      hideBtnIcon.innerText = "expand_less";
     }
   }
 
@@ -168,8 +168,8 @@ export default class View {
     $delegate(
       this.$todoContainer,
       [
-        ".todo-item .function-btn-group .delete-btn",
-        ".todo-item .function-btn-group .delete-btn span",
+        ".todo-item .function-btn-group .edit-btn",
+        ".todo-item .function-btn-group .edit-btn span",
       ],
       "click",
       ({ target }) => {

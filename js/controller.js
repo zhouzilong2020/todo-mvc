@@ -23,8 +23,13 @@ export default class Controller {
     this.view.bindToggleTimebar(this.toggleItemHide.bind(this));
     this.view.bindDeleteAllComplete(this.deleteAllComplete.bind(this));
     this.view.bindToggleAllHide(this.toggleAllHide.bind(this));
-
+    this.view.bindEditItem(this.editItem.bind(this));
     this.curToggleState = "";
+  }
+
+  editItem(id) {
+    console.log(id);
+    
   }
 
   /**
