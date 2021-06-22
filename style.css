@@ -29,7 +29,7 @@ body {
 }
 /* 顶部搜索栏 */
 .top-bar {
-  height: 105px;
+  height: 102px;
   width: 100%;
   border-radius: 24px;
   background-color: rgba(16, 128, 255, 100);
@@ -38,12 +38,14 @@ body {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
 }
+
 .toggle .active {
   background-color: red;
 }
+
 .toggle .toggle-item {
+  box-sizing: border-box;
   height: 60px;
-  margin-top: 3px;
   text-align: center;
   overflow: hidden;
   /* transition: 0.4s; */
@@ -100,25 +102,28 @@ body {
 }
 
 .taskset-item {
+  background-color: green;
+  overflow: visible;
   margin: 0 auto;
   width: 100px;
   height: 150px;
   border-radius: 24px;
-  background-color: rgba(255, 128, 0, 100);
-
   transition: 0.4s;
 }
+
 .taskset-item p,
 span {
   color: rgba(255, 255, 255, 100);
 }
 .taskset-item .top-icon {
   margin: 0;
+  border-radius: 24px 0 0 0;
   padding-left: 16px;
   padding-top: 16px;
   height: 24px;
   width: 24px;
 }
+
 .taskset-item .taskset-name {
   margin: 0;
   padding-left: 18px;
@@ -128,6 +133,7 @@ span {
   line-height: 16px;
   overflow: hidden;
 }
+
 .taskset-item .task-cnt {
   display: inline;
   margin: 0px;
@@ -144,7 +150,8 @@ span {
 }
 /*  TODO 搞一下选中的css  */
 .taskset-list .active {
-  background-color: red;
+  background-color: rgb(20, 90, 20);
+  border-radius: 5px 24px 5px 24px;
 }
 /* 任务集列表结束 */
 /* 时间bar */

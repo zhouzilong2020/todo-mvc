@@ -37,7 +37,7 @@ Date.prototype.GetDay = function () {
 };
 
 Date.prototype.LeftDay = function () {
-  return Math.floor(
+  return Math.round(
     parseInt(this.getTime() - Date.now(), 10) / 1000 / 60 / 60 / 24
   );
 };
