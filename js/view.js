@@ -529,16 +529,7 @@ export default class View {
    * 进行数据统计
    * @param {TodoList} todoList
    */
-  setTasksetStatistic(todoList) {
-    const cnt = {};
-    todoList.reduce((pre, cur) => {
-      if (!!!cnt[cur.tasksetId]) {
-        cnt[cur.tasksetId] = 1;
-      } else {
-        cnt[cur.tasksetId]++;
-      }
-    }, cnt);
-
+  setTasksetStatistic(cnt) {
     // 重置顶部数字
     const taskList = this.$tasksetList.children;
     let i = taskList.length;

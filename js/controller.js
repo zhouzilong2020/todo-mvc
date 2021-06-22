@@ -128,13 +128,21 @@ export default class Controller {
         left: { completed: false },
       }[state],
       (res) => {
-        console.log(res)
         this.view.renderItem.call(this.view, res);
-        this.view.setTasksetStatistic.call(this.view, res);
       }
     );
 
     // 全局任务清单
     this.store.countTodo(this.view.setStatistic.bind(this.view));
+    // 当前toggle下的任务集合数量
+    this.store.countTaskset(
+      {
+        "": emptyItemQuery,
+        total: emptyItemQuery,
+        done: { completed: true },
+        left: { completed: false },
+      }[state],
+      this.view.setTasksetStatistic.bind(this.view)
+    );
   }
 }

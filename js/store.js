@@ -279,7 +279,7 @@ export default class Store {
   }
 
   /**
-   * Count total, active, and completed todos.
+   * 统计全局任务清单
    *
    * @param {function(number, number, number)} callback total, left, completed
    */
@@ -295,7 +295,35 @@ export default class Store {
     callback(total, total - completed, completed);
   }
 
-  countTaskset(callback) {
-    // callback(this.getLocalStorage());
+  /**
+   * 为每一个task list统计符合条件的todo数量
+   *
+   * @param {ItemQuery} query query条件
+   * @param {function(Object)} callback 回掉函数
+   */
+  countTaskset(query, callback) {
+    const todoList = _todoList(this.getLocalStorage());
+    let k;
+    const cnt = {};
+    const result = todoList.filter((todo) => {
+      // 如果传入的是emptyQuery，则不会进入for，默认筛选全部的todo
+      for (k in query) {
+        if (query[k] !== todo[k]) {
+          return false;
+        }
+      }
+      return true;
+    });
+    // 统计todo各个任务数量
+    result.forEach((todo) => {
+      if (!cnt.hasOwnProperty(todo.tasksetId)) {
+        cnt[todo.tasksetId] = 1;
+      } else {
+        cnt[todo.tasksetId]++;
+      }
+    });
+    if (callback) {
+      callback(cnt);
+    }
   }
 }
