@@ -58,10 +58,14 @@ export default class View {
     this.$todoContainer = qs(".todo-container");
     this.$tasksetList = qs(".taskset-list");
 
+    this.$lastScrollCtx = null;
     this.$lastScrollBtnR = null;
     this.$lastScrollBtnL = null;
-    this.$lastScrollCtx = null;
     this.startX = 0;
+
+    // 记录是否第二次仍然滑动的是同一个方块，如果是，则需要额外逻辑判断
+    this.isRepeteScroll = false;
+    this.extraWidthForSecondScroll = 0;
   }
 
   // 初始化绑定操作
@@ -80,6 +84,12 @@ export default class View {
     });
 
     this.bindTouchStart((id, startX) => {
+      if (!!this.$lastScrollCtx) {
+        this.isRepeteScroll = id == this.$lastScrollCtx.dataset.id;
+      } else {
+        this.isRepeteScroll = false;
+      }
+
       this.$lastScrollCtx = this.$todoContainer.querySelector(
         `[data-id="${id}"]`
       );
@@ -96,14 +106,26 @@ export default class View {
 
     // TODO 滑动大于一定数值直接删除
     this.bindTouchMove((movingX) => {
-      const diffX = this.startX - movingX;
-      this.moveContent(diffX);
+      let diffX = this.startX - movingX;
+      // 第二次滑动同一个滑块，并且当前滑块状态为按钮展开了
+      if (this.isRepeteScroll) {
+        diffX += this.extraWidthForSecondScroll;
+      }
+      this.moveElement(diffX);
     });
 
     this.bindTouchEnd((endX) => {
-      const diffX = this.startX - endX;
+      let diffX = this.startX - endX;
+      // 第二次滑动同一个滑块，并且当前滑块状态为按钮展开了
+      if (this.isRepeteScroll) {
+        diffX += this.extraWidthForSecondScroll;
+      }
       this.setContent(diffX);
     });
+  }
+
+  clearScroll() {
+    this.$lastScrollCtx = null;
   }
 
   setTransition(sec) {
@@ -118,20 +140,22 @@ export default class View {
     this.$lastScrollBtnR.style.right = `${-rBtnMoveX}px`;
     this.$lastScrollBtnR.style.width = `${rBtnMoveX}px`;
 
-    // 左边滑到最大不能再滑动了
     const lBtnMoveX = Math.max(Math.min(0, diffX), -lBtnExpandWidth);
     this.$lastScrollBtnL.style.left = `${lBtnMoveX}px`;
     this.$lastScrollBtnL.style.width = `${-lBtnMoveX}px`;
 
+    // 滑动方向，判断展开按钮的位置
     if (diffX > 0) {
       this.$lastScrollCtx.style.left = `${-diffX}px`;
     } else {
       this.$lastScrollCtx.style.left = `${-lBtnMoveX}px`;
     }
+
+    // 判断右边按钮是否需要进行展开
     if (rBtnMoveX >= 0.618 * rBtnExpandWidth) {
       this.$lastScrollBtnR.firstElementChild.style.opacity = "1";
     } else {
-      this.$lastScrollBtnR.firstElementChild.style.fontsize = "0";
+      // this.$lastScrollBtnR.firstElementChild.style.fontsize = "0";
       this.$lastScrollBtnR.firstElementChild.style.opacity = "0";
     }
   }
@@ -140,18 +164,17 @@ export default class View {
     this.setTransition("0.6s");
     // TODO 左滑大于一定距离直接删除 直接删掉该条记录
     if (rBtnExpandWidth * 0.618 <= diffX) {
-      // 左滑动
+      // 左滑动, 大于按钮的0.618时候认为全部展开
+      this.extraWidthForSecondScroll = rBtnExpandWidth;
       diffX = rBtnExpandWidth;
     } else if (diffX <= -lBtnExpandWidth * 0.618) {
-      // 右滑动
+      // 右滑动，大于按钮的0.618时候认为全部展开
+      this.extraWidthForSecondScroll = -lBtnExpandWidth;
       diffX = -lBtnExpandWidth;
     } else {
+      this.extraWidthForSecondScroll = 0;
       diffX = 0;
     }
-    this.moveElement(diffX);
-  }
-
-  moveContent(diffX) {
     this.moveElement(diffX);
   }
 

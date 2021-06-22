@@ -29,6 +29,7 @@ export default class Controller {
 
   toggleTopBar(toggleId) {
     this.curToggleState = toggleId;
+    this.view.clearScroll();
     this.view.toggleTopBar(toggleId);
     this._filter();
   }
@@ -41,6 +42,7 @@ export default class Controller {
 
   toggleTaskset(id, active) {
     this.store.updateTaskset({ id, active }, () => {
+      this.view.clearScroll();
       this.view.toggleTaskset(id);
       this._filter();
     });
@@ -67,6 +69,7 @@ export default class Controller {
         hide: false,
       },
       () => {
+        this.view.clearScroll();
         this.view.clearNewTodo();
         this._filter();
       }
@@ -92,6 +95,7 @@ export default class Controller {
    */
   toggleItemCompleted(id, completed) {
     this.store.update({ id, completed }, () => {
+      this.view.clearScroll();
       this._filter();
     });
   }

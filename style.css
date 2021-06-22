@@ -2,7 +2,8 @@
 @import "../node_modules/material-design-icons/iconfont/material-icons.css";
 body {
   padding: 8px;
-  max-width: 800px;
+  box-sizing: border-box;
+  max-width: 600px;
   margin: 0 auto;
   font-family: "PingFangSC-regular";
   background-color: rgba(10, 10, 10, 0.9);
@@ -41,7 +42,8 @@ body {
   height: 60px;
   margin-top: 3px;
   text-align: center;
-  transition: 0.4s;
+  overflow: hidden;
+  /* transition: 0.4s; */
 }
 .toggle .toggle-item p {
   color: rgba(255, 255, 255, 100);
@@ -188,7 +190,8 @@ span {
 }
 
 .todo-container .todo-item {
-  width: 100%;
+  width: 90%;
+  margin: 0 auto;
   position: relative;
   height: auto;
   border-radius: 10px;
@@ -208,12 +211,12 @@ span {
 
 /* delete-btn */
 .todo-container .todo-item .delete-btn {
-  right: -40px;
+  right: 0px;
   background-color: red;
 }
 
 .todo-container .todo-item .delete-btn span {
-  /* font-size: 0px; */
+  font-size: 0px;
   opacity: 0;
 }
 
