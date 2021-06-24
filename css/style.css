@@ -1,16 +1,23 @@
 /* 全局样式 */
-@import "./iconfont/material-icons.css";
+@import "../iconfont/material-icons.css";
+@import "./variable.css";
+@import "./float-gadget.css";
+html {
+  height: 100%;
+}
 body {
+  padding: 8px;
+  max-width: 600px;
+  margin: 0 auto;
+  background-color: rgba(10, 10, 10, 0.9);
+}
+.main {
+  height: 100%;
+  position: relative;
   display: grid;
   row-gap: 8px;
   grid-row-gap: 8px;
-
-  padding: 8px;
-  box-sizing: border-box;
-  max-width: 600px;
-  margin: 0 auto;
   font-family: "PingFangSC-regular";
-  background-color: rgba(10, 10, 10, 0.9);
 }
 
 /* 顶部添加任务集的bar */
@@ -33,7 +40,7 @@ body {
   height: 102px;
   width: 100%;
   border-radius: 24px;
-  background-color: rgba(16, 128, 255, 100);
+  background-color: var(--primary);
 }
 .toggle {
   color: rgba(255, 255, 255, 100);
@@ -43,7 +50,7 @@ body {
 
 .toggle .active {
   border-radius: 24px;
-  color: rgba(16, 128, 255, 100);
+  color: var(--primary);
   background-color: rgba(240, 240, 240, 0.8);
 }
 
@@ -87,7 +94,7 @@ body {
   display: none;
 }
 .input-bar .btn {
-  color: rgba(16, 128, 255, 100);
+  color: var(--primary);
   width: 24px;
   height: 24px;
   line-height: 24px;
@@ -100,20 +107,19 @@ body {
 /* 顶部搜索栏结束 */
 /* 任务集列表 */
 .taskset-list {
-  /* margin-top: 10px; */
   width: 100%;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   transition: 0.3s;
 }
 .taskset-list .taskset-item:nth-child(1) {
-  background-color: green;
+  background-color: var(--task-1);
 }
 .taskset-list .taskset-item:nth-child(2) {
-  background-color: darkorange;
+  background-color: var(--task-2);
 }
 .taskset-list .taskset-item:nth-child(3) {
-  background-color: rgb(180, 10, 10);
+  background-color: var(--task-3);
 }
 
 .taskset-item {
@@ -166,7 +172,6 @@ body {
 }
 
 .taskset-list .active {
-  /* background-color: rgb(20, 90, 20); */
   border-radius: 5px 24px 5px 24px;
   box-shadow: 2px 2px white;
 }
@@ -266,15 +271,15 @@ body {
 }
 
 .todo-container .todo-item .change-task-btn-group .btn-1 {
-  background-color: green;
+  background-color: var(--task-1);
 }
 
 .todo-container .todo-item .change-task-btn-group .btn-2 {
-  background-color: darkorange;
+  background-color: var(--task-2);
 }
 
 .todo-container .todo-item .change-task-btn-group .btn-3 {
-  background-color: rgb(180, 10, 10);
+  background-color: var(--task-3);
 }
 
 .todo-container .todo-item p {
@@ -295,13 +300,13 @@ body {
 }
 /* 任务集合的颜色 */
 .todo-item .taskset-1 .finish-icon {
-  border: solid green 2px;
+  border: solid var(--task-1) 2px;
 }
 .todo-item .taskset-2 .finish-icon {
-  border: solid darkorange 2px;
+  border: solid var(--task-2) 2px;
 }
 .todo-item .taskset-3 .finish-icon {
-  border: solid rgb(180, 10, 10) 2px;
+  border: solid var(--task-3) 2px;
 }
 
 .finish-icon {

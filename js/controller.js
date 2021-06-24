@@ -24,6 +24,7 @@ export default class Controller {
     this.view.bindDeleteAllComplete(this.deleteAllComplete.bind(this));
     this.view.bindToggleAllHide(this.toggleAllHide.bind(this));
     this.view.bindEditItem(this.editItem.bind(this));
+
     this.curToggleState = "";
   }
 

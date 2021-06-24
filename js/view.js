@@ -75,6 +75,11 @@ export default class View {
 
     this.$functionBar = qs(".function-bar");
 
+    // 判断当前是否已经添加了mask listener
+    this.isMaskActive = false;
+    this.$floatGadget = qs(".float-gadget");
+    this.$mask = qs(".mask");
+
     this.$lastScrollCtx = null;
     this.$lastScrollBtnR = null;
     this.$lastScrollBtnL = null;
@@ -97,15 +102,10 @@ export default class View {
     }
   }
 
-  
   editItem(curText, handler) {
     const newText = prompt("please change your task here", curText);
     handler(newText);
   }
-
-  enableDeleteOnAdd() {}
-
-  enableDeleteOnAdd() {}
 
   bindToggleAllHide(handler) {
     $delegate(
@@ -172,6 +172,62 @@ export default class View {
       }
       this.setContent(diffX);
     });
+    this.bindToggleFloatGadget(this.toggleFloatGadget.bind(this));
+    this.bindMaskClick(this.collapseFloatGadget.bind(this));
+  }
+
+  /**
+   * 设置全局blur效果
+   * @param {string}} size
+   */
+  setMask(size) {
+    this.$mask.style.filter = `blur(${size})`;
+  }
+
+  /**
+   * mask 只能用于关掉float gadget
+   */
+  bindMaskClick(handler) {
+    $on(this.$mask, "click", handler, true);
+  }
+  /**
+   * 折叠float gadget
+   */
+  collapseFloatGadget() {
+    if (this.$floatGadget.classList.contains("expand")) {
+      this.$floatGadget.style.transition = "0.2s";
+      this.setMask("0");
+      this.$floatGadget.classList.remove("expand");
+      setTimeout(() => {
+        this.$floatGadget.style.transition = "0";
+      }, 200);
+    }
+  }
+
+  /**
+   * 隐藏、现实float gadget
+   */
+  toggleFloatGadget() {
+    // console.log(this.$floatGadget);
+    this.$floatGadget.style.transition = "0.2s";
+    if (!this.$floatGadget.classList.contains("expand")) {
+      this.setMask("2px");
+      this.$floatGadget.classList.add("expand");
+    } else {
+      this.setMask("0");
+      this.$floatGadget.classList.remove("expand");
+    }
+    setTimeout(() => {
+      this.$floatGadget.style.transition = "0";
+    }, 200);
+  }
+
+  /**
+   * 绑定toggle gadget 事件
+   * @param {function}} handler
+   */
+  bindToggleFloatGadget(handler) {
+    $on(this.$floatGadget, "click", handler, true);
   }
 
   /**
