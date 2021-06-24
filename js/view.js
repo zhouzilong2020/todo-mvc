@@ -92,10 +92,18 @@ export default class View {
     // 记录是否第二次仍然滑动的是同一个方块，如果是，则需要额外逻辑判断
     this.isRepeteScroll = false;
     this.extraWidthForSecondScroll = 0;
+
+    this.date = null;
   }
 
   // 初始化绑定操作
   init() {
+    qs(".date-input").min = new Date().Format("yyyy-MM-dd");
+    $on(qs(".date-input"), "change", () => {
+      this.date = qs(".date-input").value;
+      qs(".add-btn").click();
+    });
+
     this.bindTouchStart((id, startX) => {
       if (!!this.$lastScrollCtx) {
         this.isRepeteScroll = id == this.$lastScrollCtx.dataset.id;
@@ -568,6 +576,7 @@ export default class View {
     const eventHandler = (event) => {
       if (event.code === "Enter" || event.type === "click") {
         const mes = this.$input.value;
+        const due = this.date;
         const curTaskset = _activeTasksetId(this.$tasksetList.children);
 
         if (
@@ -581,7 +590,7 @@ export default class View {
           );
           return;
         } else if (curTaskset.length === 1) {
-          handler(mes, curTaskset[0]);
+          handler(mes, curTaskset[0], due);
         }
       }
     };
