@@ -96,7 +96,6 @@ export default class View {
       [".btn-complete-all", ".btn-complete-all span"],
       "click",
       ({ target }) => {
-        // 与上一个状态取反
         handler();
       },
       true
@@ -208,7 +207,7 @@ export default class View {
    */
   collapseFloatGadget() {
     if (this.$floatGadget.classList.contains("expand")) {
-      this.$floatGadget.style.transition = "0.2s";
+      this.$floatGadget.style.transition = "0.4s";
       this.setMask("0");
       this.$floatGadget.classList.remove("expand");
       setTimeout(() => {
@@ -222,7 +221,7 @@ export default class View {
    */
   toggleFloatGadget() {
     // console.log(this.$floatGadget);
-    this.$floatGadget.style.transition = "0.2s";
+    this.$floatGadget.style.transition = "0.4s";
     if (!this.$floatGadget.classList.contains("expand")) {
       this.setMask("2px");
       this.$floatGadget.classList.add("expand");
