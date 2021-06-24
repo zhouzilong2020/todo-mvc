@@ -5,8 +5,8 @@
   width: 50px;
   height: 50px;
 
-  top: 0px;
-  left: 0px;
+  top: 61.8%;
+  right: 0;
 
   border-radius: 13px;
   background-color: rgba(255, 255, 255, 0.4);
@@ -84,4 +84,8 @@
 
 .float-gadget .select {
   background-color: rgba(255, 255, 255, 0.7);
+}
+
+.mask {
+  height: 100%;
 }

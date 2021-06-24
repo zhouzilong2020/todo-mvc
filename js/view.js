@@ -90,6 +90,51 @@ export default class View {
     this.extraWidthForSecondScroll = 0;
   }
 
+  // 初始化绑定操作
+  init() {
+    this.bindTouchStart((id, startX) => {
+      if (!!this.$lastScrollCtx) {
+        this.isRepeteScroll = id == this.$lastScrollCtx.dataset.id;
+      } else {
+        this.isRepeteScroll = false;
+      }
+
+      this.$lastScrollCtx = this.$todoContainer.querySelector(
+        `[data-id="${id}"]`
+      );
+      this.$lastScrollBtnR = this.$todoContainer.querySelector(
+        `[data-id="${id}"] .function-btn-group`
+      );
+      this.$lastScrollBtnL = this.$todoContainer.querySelector(
+        `[data-id="${id}"] .change-task-btn-group`
+      );
+      // 清空transition，操作顺滑
+      this.setTransition("");
+      this.startX = startX;
+    });
+
+    this.bindTouchMove((movingX) => {
+      let diffX = this.startX - movingX;
+      // 第二次滑动同一个滑块，并且当前滑块状态为按钮展开了
+      if (this.isRepeteScroll) {
+        diffX += this.extraWidthForSecondScroll;
+      }
+      this.moveElement(diffX);
+    });
+
+    this.bindTouchEnd((endX) => {
+      let diffX = this.startX - endX;
+      // 第二次滑动同一个滑块，并且当前滑块状态为按钮展开了
+      if (this.isRepeteScroll) {
+        diffX += this.extraWidthForSecondScroll;
+      }
+      this.setContent(diffX);
+    });
+
+    this.bindToggleFloatGadget(this.toggleFloatGadget.bind(this));
+    this.bindMaskClick(this.collapseFloatGadget.bind(this));
+  }
+
   bindCompleteAll(handler) {
     $delegate(
       this.$floatGadget,
@@ -144,50 +189,6 @@ export default class View {
     );
   }
 
-  // 初始化绑定操作
-  init() {
-    this.bindTouchStart((id, startX) => {
-      if (!!this.$lastScrollCtx) {
-        this.isRepeteScroll = id == this.$lastScrollCtx.dataset.id;
-      } else {
-        this.isRepeteScroll = false;
-      }
-
-      this.$lastScrollCtx = this.$todoContainer.querySelector(
-        `[data-id="${id}"]`
-      );
-      this.$lastScrollBtnR = this.$todoContainer.querySelector(
-        `[data-id="${id}"] .function-btn-group`
-      );
-      this.$lastScrollBtnL = this.$todoContainer.querySelector(
-        `[data-id="${id}"] .change-task-btn-group`
-      );
-      // 清空transition，操作顺滑
-      this.setTransition("");
-      this.startX = startX;
-    });
-
-    this.bindTouchMove((movingX) => {
-      let diffX = this.startX - movingX;
-      // 第二次滑动同一个滑块，并且当前滑块状态为按钮展开了
-      if (this.isRepeteScroll) {
-        diffX += this.extraWidthForSecondScroll;
-      }
-      this.moveElement(diffX);
-    });
-
-    this.bindTouchEnd((endX) => {
-      let diffX = this.startX - endX;
-      // 第二次滑动同一个滑块，并且当前滑块状态为按钮展开了
-      if (this.isRepeteScroll) {
-        diffX += this.extraWidthForSecondScroll;
-      }
-      this.setContent(diffX);
-    });
-    this.bindToggleFloatGadget(this.toggleFloatGadget.bind(this));
-    this.bindMaskClick(this.collapseFloatGadget.bind(this));
-  }
-
   /**
    * 设置全局blur效果
    * @param {string}} size
@@ -202,10 +203,12 @@ export default class View {
   bindMaskClick(handler) {
     $on(this.$mask, "click", handler, false);
   }
+
   /**
    * 折叠float gadget
    */
   collapseFloatGadget() {
+    console.log("asd")
     if (this.$floatGadget.classList.contains("expand")) {
       this.$floatGadget.style.transition = "0.4s";
       this.setMask("0");
