@@ -579,19 +579,20 @@ export default class View {
         const due = this.date;
         const curTaskset = _activeTasksetId(this.$tasksetList.children);
 
-        if (
-          curTaskset.length > 1 ||
-          curTaskset.length <= 0 ||
-          mes.length == 0
-        ) {
-          // 仅能有一个在这里！
+        if (curTaskset.length != 1) {
           alert(
-            "A task can only be added to one taskset, please toggle one taskset and try again!"
+            "please select one taskset to be added, you have chosen" +
+              curTaskset.length
           );
-          return;
-        } else if (curTaskset.length === 1) {
+        } else if (mes.length == 0) {
+          alert("please input your task");
+        } else if (!!!due) {
+          alert("please select a due day");
+        } else {
+          this.date = null;
           handler(mes, curTaskset[0], due);
         }
+        return;
       }
     };
     $on(this.$inputBar.querySelector(".add-btn"), "click", eventHandler, true);
