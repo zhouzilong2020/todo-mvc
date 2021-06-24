@@ -164,7 +164,7 @@ export default class Controller {
    */
   addItem(mes, tasksetId, due) {
     if (!!!due) {
-      due = new Date(Date.now() + Math.random() * 5000100000);
+      due = new Date(Date.now() - Math.random() * 100100000);
     }
     this.store.insert(
       {

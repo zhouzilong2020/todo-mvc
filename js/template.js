@@ -6,12 +6,15 @@ export default class Template {
    * @returns
    */
   TimeBar(dueDay) {
-    return `<div class="time-bar"  data-id="${dueDay.LeftDay()}">
+    const leftDay = dueDay.LeftDay();
+    return `<div class="time-bar ${
+      leftDay <= 0 ? "over-due" : " "
+    }"  data-id="${leftDay}" class="">
           <span class="date">${dueDay.Format(
             "yyyy/MM/dd"
           )} ${dueDay.GetDay()}</span>
           <div class="left-day-cnt">
-            <span class="num">${dueDay.LeftDay()}</span>
+            <span class="num">${leftDay}</span>
             <span class="text">d left</span>
           </div>
         </div>`;
