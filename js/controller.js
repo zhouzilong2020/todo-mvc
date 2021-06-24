@@ -43,7 +43,6 @@ export default class Controller {
       }[state],
       (todoList) => {
         let len = todoList.length;
-        console.log("asdasdasdasd")
         todoList.forEach((todo) => {
           this.store.update(
             {

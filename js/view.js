@@ -136,6 +136,7 @@ export default class View {
     });
 
     this.bindToggleFloatGadget(this.toggleFloatGadget.bind(this));
+
     this.bindMaskClick(() => {
       if (this.$floatGadget.classList.contains("expand")) {
         this.collapseFloatGadget.call(this);
@@ -148,11 +149,23 @@ export default class View {
       }
     });
 
+    this.enableFloatGadegt();
+  }
+
+  enableFloatGadegt() {
     $on(this.$floatGadget, "touchstart", () => {
+      if (this.$floatGadget.classList.contains("expand")) {
+        //  展开后移除默认
+        return;
+      }
       this.$floatGadget.style.transition = "0s";
     });
 
     $on(this.$floatGadget, "touchmove", () => {
+      if (this.$floatGadget.classList.contains("expand")) {
+        //  展开后移除默认
+        return;
+      }
       qs("body").style.overflow = "hidden";
       event.preventDefault();
       event.stopPropagation();
@@ -162,6 +175,10 @@ export default class View {
     });
 
     $on(this.$floatGadget, "touchend", () => {
+      if (this.$floatGadget.classList.contains("expand")) {
+        //  展开后移除默认
+        return;
+      }
       qs("body").style.overflow = "";
       const offset = -30;
       this.setFloatPosition(
@@ -304,8 +321,8 @@ export default class View {
     const offset = -30;
     this.startX = event.clientX + offset;
     this.startY = event.clientY + offset;
-
     if (!this.$floatGadget.classList.contains("expand")) {
+      // 删掉移动监听
       this.setMask("2px");
       this.$floatGadget.style.transition = "0.3s";
       this.$floatGadget.style.top = "50%";
@@ -318,8 +335,8 @@ export default class View {
         }, 200);
       }, 300);
     } else {
+      this.collapseFloatGadget();
       this.setMask("0");
-      this.$floatGadget.classList.remove("expand");
     }
   }
 
@@ -562,7 +579,7 @@ export default class View {
    */
   bindAddNewTodo(handler, verbose) {
     const eventHandler = (event) => {
-      if (event.code == "Enter") {
+      if (event.code === "Enter" || event.type === "click") {
         const mes = this.$input.value;
         const curTaskset = _activeTasksetId(this.$tasksetList.children);
 
@@ -581,7 +598,7 @@ export default class View {
         }
       }
     };
-    $on(this.$inputBar.querySelector("span"), "click", eventHandler, true);
+    $on(this.$inputBar.querySelector(".add-btn"), "click", eventHandler, true);
     $on(this.$input, "keyup", eventHandler, true);
   }
 
@@ -632,6 +649,7 @@ export default class View {
       !!verbose
     );
   }
+
   /**
    * 绑定toggle 时间轴，隐藏或者展示中间的task
    * @param {function} handler handle function
