@@ -214,7 +214,10 @@ export default class View {
   bindCompleteAll(handler) {
     $delegate(
       this.$floatGadget,
-      [".btn-complete-all", ".btn-complete-all span"],
+      [
+        ".float-gadget .btn-group .btn-complete-all",
+        ".float-gadget .btn-group .btn-complete-all span",
+      ],
       "click",
       ({ target }) => {
         handler();
@@ -298,7 +301,6 @@ export default class View {
    * 隐藏、现实float gadget
    */
   toggleFloatGadget() {
-    console.log("asd")
     const offset = -30;
     this.startX = event.clientX + offset;
     this.startY = event.clientY + offset;
@@ -319,6 +321,7 @@ export default class View {
       this.setMask("0");
       this.$floatGadget.classList.remove("expand");
     }
+    
   }
 
   /**
@@ -326,7 +329,7 @@ export default class View {
    * @param {function}} handler
    */
   bindToggleFloatGadget(handler) {
-    $on(this.$floatGadget, "click", handler, true);
+    $on(this.$floatGadget, "click", handler, false);
   }
 
   /**
