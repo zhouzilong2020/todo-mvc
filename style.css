@@ -106,9 +106,17 @@ body {
   grid-template-columns: repeat(3, 1fr);
   transition: 0.3s;
 }
+.taskset-list .taskset-item:nth-child(1) {
+  background-color: green;
+}
+.taskset-list .taskset-item:nth-child(2) {
+  background-color: darkorange;
+}
+.taskset-list .taskset-item:nth-child(3) {
+  background-color: rgb(180, 10, 10);
+}
 
 .taskset-item {
-  background-color: green;
   overflow: visible;
   margin: 0 auto;
   width: 100px;
@@ -157,11 +165,12 @@ body {
   text-align: end;
 }
 
-/*  TODO 搞一下选中的css  */
 .taskset-list .active {
-  background-color: rgb(20, 90, 20);
+  /* background-color: rgb(20, 90, 20); */
   border-radius: 5px 24px 5px 24px;
+  box-shadow: 2px 2px white;
 }
+
 /* 任务集列表结束 */
 /* 时间bar */
 .todo-container .time-bar {
@@ -261,11 +270,11 @@ body {
 }
 
 .todo-container .todo-item .change-task-btn-group .btn-2 {
-  background-color: yellowgreen;
+  background-color: darkorange;
 }
 
 .todo-container .todo-item .change-task-btn-group .btn-3 {
-  background-color: orangered;
+  background-color: rgb(180, 10, 10);
 }
 
 .todo-container .todo-item p {
@@ -284,12 +293,21 @@ body {
   display: inline-block;
   vertical-align: middle;
 }
+/* 任务集合的颜色 */
+.todo-item .taskset-1 .finish-icon {
+  border: solid green 2px;
+}
+.todo-item .taskset-2 .finish-icon {
+  border: solid darkorange 2px;
+}
+.todo-item .taskset-3 .finish-icon {
+  border: solid rgb(180, 10, 10) 2px;
+}
+
 .finish-icon {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  /* 任务集合的颜色！ */
-  border: solid orange 2px;
   border-radius: 25%;
   background-color: white;
   width: 24px;
