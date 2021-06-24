@@ -720,6 +720,7 @@ export default class View {
   }
 
   clearNewTodo() {
+    this.$input.blur();
     this.$input.value = "";
   }
 
@@ -731,8 +732,7 @@ export default class View {
   renderItem(todoList) {
     // TODO 增量式更新
     this.$todoContainer.innerHTML = "";
-    // TODO 按照不同顺序排列
-    // TODO 按照优先级排列
+
     // 排序规则
     //  1. due 少的优先
     //  2. 未完成优先
@@ -774,8 +774,6 @@ export default class View {
         } else {
           todo.push(cur);
         }
-
-        // this.$todoContainer.innerHTML += this.template.Todo(cur);
         return cur;
       },
       { due: new Date(0) }

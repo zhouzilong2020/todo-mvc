@@ -11,6 +11,8 @@
 	8.todo-item向右滑动出现切换任务栏
 	9.todo-item向左滑动大于一定距离直接删除
 	10.滑动控件，可以随着手指滑动，点击后展开，可以一键完成当前列表下所有任务，删除所有已完成任务。
+	11.todo可按照如下三个规则动态更新1.due少的优先 2.未完成优先 3.先添加的优先
+
 	
 Git代码仓库：https://github.com/zhouzilong2020/todo-mvc
 部署地址：zhouzilong2020.github.io
