@@ -298,13 +298,14 @@ export default class View {
    * 隐藏、现实float gadget
    */
   toggleFloatGadget() {
+    console.log("asd")
     const offset = -30;
     this.startX = event.clientX + offset;
     this.startY = event.clientY + offset;
 
     if (!this.$floatGadget.classList.contains("expand")) {
       this.setMask("2px");
-      this.$floatGadget.style.transition = "0.4s";
+      this.$floatGadget.style.transition = "0.3s";
       this.$floatGadget.style.top = "50%";
       this.$floatGadget.style.left = "50%";
       setTimeout(() => {
@@ -313,7 +314,7 @@ export default class View {
         setTimeout(() => {
           this.$floatGadget.style.transition = "0s";
         }, 200);
-      }, 400);
+      }, 300);
     } else {
       this.setMask("0");
       this.$floatGadget.classList.remove("expand");
