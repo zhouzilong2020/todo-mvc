@@ -40,6 +40,9 @@ const _activeTasksetId = (eleList) => {
   return result;
 };
 const _clientX = (event) => event.changedTouches[0].clientX;
+const _clientY = (event) => event.changedTouches[0].clientY;
+const _screenH = (event) => event.view.outerHeight;
+const _screenW = (event) => event.view.outerWidth;
 
 const _hide = (element) =>
   element.classList.contains("hide") ||
@@ -84,6 +87,7 @@ export default class View {
     this.$lastScrollBtnR = null;
     this.$lastScrollBtnL = null;
     this.startX = 0;
+    this.startY = 0;
 
     // 记录是否第二次仍然滑动的是同一个方块，如果是，则需要额外逻辑判断
     this.isRepeteScroll = false;
@@ -132,7 +136,73 @@ export default class View {
     });
 
     this.bindToggleFloatGadget(this.toggleFloatGadget.bind(this));
-    this.bindMaskClick(this.collapseFloatGadget.bind(this));
+    this.bindMaskClick(() => {
+      this.collapseFloatGadget.call(this);
+      this.setFloatPosition(
+        this.startX,
+        this.startY,
+        _screenH(event),
+        _screenW(event)
+      );
+    });
+
+    $on(this.$floatGadget, "touchstart", () => {
+      this.$floatGadget.style.transition = "0s";
+    });
+
+    $on(this.$floatGadget, "touchmove", () => {
+      const offset = -25;
+      this.$floatGadget.style.left = _clientX(event) + offset + "px";
+      this.$floatGadget.style.top = _clientY(event) + offset + "px";
+    });
+
+    $on(this.$floatGadget, "touchend", () => {
+      const offset = -25;
+      this.setFloatPosition(
+        _clientX(event) + offset,
+        _clientY(event) + offset,
+        _screenH(event),
+        _screenW(event)
+      );
+    });
+  }
+
+  setFloatPosition(curX, curY, screenH, screenW) {
+    this.$floatGadget.style.transition = "0.4s";
+
+    const offset = -25;
+    const pos = {
+      left: [0, curY],
+      top: [curX, 0],
+      bottom: [curX, screenH + 2 * offset],
+      right: [screenW + 2 * offset, curY],
+    };
+
+    const diffX = Math.min(curX, screenW - curX);
+    const diffY = Math.min(curY, screenH - curY);
+
+    if (diffX < diffY) {
+      if (curX / screenW < 0.5) {
+        this.setPos(this.$floatGadget, pos["left"]);
+      } else {
+        this.setPos(this.$floatGadget, pos["right"]);
+      }
+    } else {
+      if (curY / screenH > 0.5) {
+        this.setPos(this.$floatGadget, pos["bottom"]);
+      } else {
+        this.setPos(this.$floatGadget, pos["top"]);
+      }
+    }
+
+    setTimeout(() => {
+      this.$floatGadget.style.transition = "0s";
+    }, 400);
+  }
+
+  setPos(ele, pos) {
+    ele.style.left = pos[0] + "px";
+    ele.style.top = pos[1] + "px";
   }
 
   bindCompleteAll(handler) {
@@ -201,21 +271,20 @@ export default class View {
    * mask 只能用于关掉float gadget
    */
   bindMaskClick(handler) {
-    $on(this.$mask, "click", handler, false);
+    $on(this.$mask, "click", handler, true);
   }
 
   /**
    * 折叠float gadget
    */
   collapseFloatGadget() {
-    console.log("asd");
     if (this.$floatGadget.classList.contains("expand")) {
-      this.$floatGadget.style.transition = "0.4s";
+      this.$floatGadget.style.transition = "0.2s";
       this.setMask("0");
       this.$floatGadget.classList.remove("expand");
       setTimeout(() => {
         this.$floatGadget.style.transition = "0";
-      }, 200);
+      }, 400);
     }
   }
 
@@ -223,18 +292,28 @@ export default class View {
    * 隐藏、现实float gadget
    */
   toggleFloatGadget() {
-    // console.log(this.$floatGadget);
-    this.$floatGadget.style.transition = "0.4s";
+    const offset = -25;
+    this.startX = event.clientX + offset;
+    this.startY = event.clientY + offset;
+
     if (!this.$floatGadget.classList.contains("expand")) {
       this.setMask("2px");
-      this.$floatGadget.classList.add("expand");
+      this.$floatGadget.style.transition = "0.4s";
+      this.$floatGadget.style.top = "50%";
+      this.$floatGadget.style.left = "50%";
+      setTimeout(() => {
+        this.$floatGadget.style.transition = "0.2s";
+        this.$floatGadget.classList.add("expand");
+        setTimeout(() => {
+          this.$floatGadget.style.transition = "0s";
+        }, 200);
+      }, 400);
+      
     } else {
       this.setMask("0");
       this.$floatGadget.classList.remove("expand");
     }
-    setTimeout(() => {
-      this.$floatGadget.style.transition = "0";
-    }, 200);
+
   }
 
   /**
@@ -242,7 +321,7 @@ export default class View {
    * @param {function}} handler
    */
   bindToggleFloatGadget(handler) {
-    $on(this.$floatGadget, "click", handler, false);
+    $on(this.$floatGadget, "click", handler, true);
   }
 
   /**
