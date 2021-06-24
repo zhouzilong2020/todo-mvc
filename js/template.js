@@ -3,12 +3,13 @@ export default class Template {
   /**
    * add a new day bar to the list
    * @param {Date} dueDay
+   * @param {boolean} completed
    * @returns
    */
-  TimeBar(dueDay) {
+  TimeBar(dueDay, completed) {
     const leftDay = dueDay.LeftDay();
     return `<div class="time-bar ${
-      leftDay <= 0 ? "over-due" : " "
+      leftDay <= 0 && !!!completed ? "over-due" : " "
     }"  data-id="${leftDay}" class="">
           <span class="date">${dueDay.Format(
             "yyyy/MM/dd"

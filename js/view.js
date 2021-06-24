@@ -208,7 +208,7 @@ export default class View {
    * 折叠float gadget
    */
   collapseFloatGadget() {
-    console.log("asd")
+    console.log("asd");
     if (this.$floatGadget.classList.contains("expand")) {
       this.$floatGadget.style.transition = "0.4s";
       this.setMask("0");
@@ -646,7 +646,10 @@ export default class View {
     todoList.reduce(
       (pre, cur) => {
         if (pre.due.getDate() !== cur.due.getDate()) {
-          this.$todoContainer.innerHTML += this.template.TimeBar(cur.due);
+          this.$todoContainer.innerHTML += this.template.TimeBar(
+            cur.due,
+            cur.completed
+          );
         }
         this.$todoContainer.innerHTML += this.template.Todo(cur);
         return cur;
