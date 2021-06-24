@@ -90,6 +90,19 @@ export default class View {
     this.extraWidthForSecondScroll = 0;
   }
 
+  bindCompleteAll(handler) {
+    $delegate(
+      this.$floatGadget,
+      [".btn-complete-all", ".btn-complete-all span"],
+      "click",
+      ({ target }) => {
+        // 与上一个状态取反
+        handler();
+      },
+      true
+    );
+  }
+
   changeHideBtn(hide) {
     const hideBtnIcon = this.$functionBar.querySelector(".hide-btn span");
     const hideBtn = this.$functionBar.querySelector(".hide-btn");
@@ -122,8 +135,8 @@ export default class View {
 
   bindDeleteAllComplete(handler) {
     $delegate(
-      this.$functionBar,
-      [".function-bar .delete-btn", ".function-bar .delete-btn span"],
+      this.$floatGadget,
+      [".btn-delete-all", ".btn-delete-all span"],
       "click",
       ({ target }) => {
         handler();
@@ -188,7 +201,7 @@ export default class View {
    * mask 只能用于关掉float gadget
    */
   bindMaskClick(handler) {
-    $on(this.$mask, "click", handler, true);
+    $on(this.$mask, "click", handler, false);
   }
   /**
    * 折叠float gadget
@@ -227,7 +240,7 @@ export default class View {
    * @param {function}} handler
    */
   bindToggleFloatGadget(handler) {
-    $on(this.$floatGadget, "click", handler, true);
+    $on(this.$floatGadget, "click", handler, false);
   }
 
   /**

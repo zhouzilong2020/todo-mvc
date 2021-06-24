@@ -390,8 +390,8 @@ body {
 
 /* function bar */
 .function-bar {
-  position: relative;
-  height: 24px;
+  height: 0px;
+
   color: white;
 }
 .function-bar .btn {
@@ -399,12 +399,12 @@ body {
 }
 .function-bar .btn:nth-child(1) {
   display: flex;
-  float: left;
-}
-.function-bar .btn:nth-child(2) {
-  display: flex;
   float: right;
 }
+/* .function-bar .btn:nth-child(2) {
+  display: flex;
+  float: right;
+} */
 
 .function-bar .btn .text {
   vertical-align: center;
