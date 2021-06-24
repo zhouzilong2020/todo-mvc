@@ -778,6 +778,12 @@ export default class View {
       },
       { due: new Date(0) }
     );
+    todo.forEach((a) => {
+      this.$todoContainer.innerHTML += this.template.Todo(a);
+    });
+    done.forEach((a) => {
+      this.$todoContainer.innerHTML += this.template.Todo(a);
+    });
   }
 
   /**
