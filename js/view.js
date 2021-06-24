@@ -137,13 +137,15 @@ export default class View {
 
     this.bindToggleFloatGadget(this.toggleFloatGadget.bind(this));
     this.bindMaskClick(() => {
-      this.collapseFloatGadget.call(this);
-      this.setFloatPosition(
-        this.startX,
-        this.startY,
-        _screenH(event),
-        _screenW(event)
-      );
+      if (this.$floatGadget.classList.contains("expand")) {
+        this.collapseFloatGadget.call(this);
+        this.setFloatPosition(
+          this.startX,
+          this.startY,
+          _screenH(event),
+          _screenW(event)
+        );
+      }
     });
 
     $on(this.$floatGadget, "touchstart", () => {
@@ -151,13 +153,13 @@ export default class View {
     });
 
     $on(this.$floatGadget, "touchmove", () => {
-      const offset = -25;
+      const offset = -30;
       this.$floatGadget.style.left = _clientX(event) + offset + "px";
       this.$floatGadget.style.top = _clientY(event) + offset + "px";
     });
 
     $on(this.$floatGadget, "touchend", () => {
-      const offset = -25;
+      const offset = -30;
       this.setFloatPosition(
         _clientX(event) + offset,
         _clientY(event) + offset,
@@ -170,7 +172,7 @@ export default class View {
   setFloatPosition(curX, curY, screenH, screenW) {
     this.$floatGadget.style.transition = "0.4s";
 
-    const offset = -25;
+    const offset = -30;
     const pos = {
       left: [0, curY],
       top: [curX, 0],
@@ -292,7 +294,7 @@ export default class View {
    * 隐藏、现实float gadget
    */
   toggleFloatGadget() {
-    const offset = -25;
+    const offset = -30;
     this.startX = event.clientX + offset;
     this.startY = event.clientY + offset;
 
@@ -308,12 +310,10 @@ export default class View {
           this.$floatGadget.style.transition = "0s";
         }, 200);
       }, 400);
-      
     } else {
       this.setMask("0");
       this.$floatGadget.classList.remove("expand");
     }
-
   }
 
   /**
