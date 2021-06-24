@@ -206,14 +206,12 @@ export default class Controller {
       due = new Date(Date.now() + Math.random() * 9900100000);
     } else {
       let date = due.split("-");
-      console.log(date);
       due = new Date(
         parseInt(date[0], 10),
         parseInt(date[1], 10) - 1,
         parseInt(date[2], 10)
       );
     }
-    console.log(due);
     this.store.insert(
       {
         id: Date.now(),

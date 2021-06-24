@@ -738,22 +738,44 @@ export default class View {
     //  2. 未完成优先
     //  3. 后添加的优先
 
-    //  1. due 少的优先
+    //  3.后添加的优先
+    todoList.sort((a, b) => {
+      return a.id - b.due;
+    });
+    //  2. due 少的优先
     todoList.sort((a, b) => {
       return a.due.LeftDay() - b.due.LeftDay();
     });
-    //  TODO 2.未完成的优先
-    //  TODO 3. 后添加的优先
+
+    let done = [];
+    let todo = [];
 
     todoList.reduce(
       (pre, cur) => {
-        if (pre.due.getDate() !== cur.due.getDate()) {
+        if (pre.due.getTime() !== cur.due.getTime()) {
+          todo.forEach((a) => {
+            this.$todoContainer.innerHTML += this.template.Todo(a);
+          });
+          done.forEach((a) => {
+            this.$todoContainer.innerHTML += this.template.Todo(a);
+          });
+          // 清空
+          done = [];
+          todo = [];
+
           this.$todoContainer.innerHTML += this.template.TimeBar(
             cur.due,
             cur.completed
           );
         }
-        this.$todoContainer.innerHTML += this.template.Todo(cur);
+        // due一样，进入tempList
+        if (cur.completed) {
+          done.push(cur);
+        } else {
+          todo.push(cur);
+        }
+
+        // this.$todoContainer.innerHTML += this.template.Todo(cur);
         return cur;
       },
       { due: new Date(0) }
