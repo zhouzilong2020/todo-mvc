@@ -1,4 +1,5 @@
-import { qs, $delegate, $on, $noMore } from "./helper.js";
+import { qs, $delegate, $on, $noMore,escapeForHTML } from "./helper.js";
+
 import "./dateUtils.js";
 import { TasksetList, TodoList } from "./item.js";
 
@@ -590,7 +591,7 @@ export default class View {
   bindAddNewTodo(handler, verbose) {
     const eventHandler = (event) => {
       if (event.code === "Enter" || event.type === "click") {
-        const mes = this.$input.value;
+        const mes = escapeForHTML(this.$input.value);
         const due = this.date;
         const curTaskset = _activeTasksetId(this.$tasksetList.children);
 

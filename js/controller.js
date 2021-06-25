@@ -1,6 +1,7 @@
 import View from "./view.js";
 import Store from "./store.js";
 import { emptyItemQuery } from "./item.js";
+import { escapeForHTML } from "./helper.js";
 
 const _dueTime = (element) =>
   parseInt(element.dataset.due || element.parentNode.dataset.due, 10);
@@ -201,7 +202,6 @@ export default class Controller {
    * @param {!Date} due todo的截止日期
    */
   addItem(mes, tasksetId, due) {
-    console.log(due);
     if (!!!due) {
       due = new Date(Date.now() + Math.random() * 9900100000);
     } else {
