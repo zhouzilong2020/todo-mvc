@@ -21,6 +21,6 @@
 
 	
 Git代码仓库：https://github.com/zhouzilong2020/todo-mvc
-部署地址：zhouzilong2020.github.io
+部署地址：https://zhouzilong2020.github.io/todo-mvc/
 
 项目架构参考了TODO-MVC的整体架构。全部代码均为个人实现。

@@ -13,9 +13,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  filter: blur(1px);
 }
 
-.float-gadget::after {
+.hover::after {
   z-index: 11;
   width: 54px;
   height: 54px;
@@ -23,7 +24,7 @@
   display: block;
   position: absolute;
   border-radius: 13px;
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(255, 255, 255, 0.3);
   filter: blur(1px);
 }
 
@@ -36,6 +37,7 @@
   height: 20px;
   border-radius: 100%;
   background-color: rgba(255, 255, 255, 0.6);
+
 }
 
 .expand {

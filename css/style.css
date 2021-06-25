@@ -86,7 +86,7 @@ body {
   border-radius: 24px;
 
   color: rgba(0, 0, 0, 100);
-  background-color: rgba(255, 255, 255, 100);
+  background-color: rgba(255, 255, 255, 1);
 }
 .input-bar .date-input {
   height: 40px;

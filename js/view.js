@@ -156,6 +156,14 @@ export default class View {
         //  展开后移除移动事件
         return;
       }
+      if (!this.$floatGadget.classList.contains("hover")) {
+        this.$floatGadget.style.transition = "0.2s";
+        this.$floatGadget.classList.add("hover");
+        setTimeout(() => {
+          this.$floatGadget.style.transition = "0";
+        }, 200);
+      }
+
       this.startX = _clientX(event);
       this.startY = _clientY(event);
       this.$floatGadget.style.transition = "0s";
@@ -176,6 +184,13 @@ export default class View {
       if (this.$floatGadget.classList.contains("expand")) {
         //  展开后移除移动事件
         return;
+      }
+      if (this.$floatGadget.classList.contains("hover")) {
+        this.$floatGadget.style.transition = "0.2s";
+        this.$floatGadget.classList.remove("hover");
+        setTimeout(() => {
+          this.$floatGadget.style.transition = "0";
+        }, 200);
       }
       qs("body").style.overflow = "";
       const offset = -30;
