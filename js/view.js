@@ -1,4 +1,4 @@
-import { qs, $delegate, $on, $noMore,escapeForHTML } from "./helper.js";
+import { qs, $delegate, $on, $noMore, escapeForHTML } from "./helper.js";
 
 import "./dateUtils.js";
 import { TasksetList, TodoList } from "./item.js";
@@ -154,16 +154,10 @@ export default class View {
   enableFloatGadegt() {
     $on(this.$floatGadget, "touchstart", () => {
       if (this.$floatGadget.classList.contains("expand")) {
-        //  展开后移除移动事件
+        //  展开后移ƒ除移动事件
         return;
       }
-      if (!this.$floatGadget.classList.contains("hover")) {
-        this.$floatGadget.style.transition = "0.2s";
-        this.$floatGadget.classList.add("hover");
-        setTimeout(() => {
-          this.$floatGadget.style.transition = "0";
-        }, 200);
-      }
+      this.addBlur();
 
       this.startX = _clientX(event);
       this.startY = _clientY(event);
@@ -186,13 +180,7 @@ export default class View {
         //  展开后移除移动事件
         return;
       }
-      if (this.$floatGadget.classList.contains("hover")) {
-        this.$floatGadget.style.transition = "0.2s";
-        this.$floatGadget.classList.remove("hover");
-        setTimeout(() => {
-          this.$floatGadget.style.transition = "0";
-        }, 200);
-      }
+      this.removeBlur();
       qs("body").style.overflow = "";
       const offset = -30;
       this.setFloatPosition(
@@ -202,6 +190,24 @@ export default class View {
         _screenW(event)
       );
     });
+  }
+  removeBlur() {
+    if (this.$floatGadget.classList.contains("hover")) {
+      this.$floatGadget.style.transition = "0.2s";
+      this.$floatGadget.classList.remove("hover");
+      setTimeout(() => {
+        this.$floatGadget.style.transition = "0";
+      }, 200);
+    }
+  }
+  addBlur() {
+    if (!this.$floatGadget.classList.contains("hover")) {
+      this.$floatGadget.style.transition = "0.2s";
+      this.$floatGadget.classList.add("hover");
+      setTimeout(() => {
+        this.$floatGadget.style.transition = "0";
+      }, 200);
+    }
   }
 
   setFloatPosition(curX, curY, screenH, screenW) {
@@ -334,6 +340,7 @@ export default class View {
   toggleFloatGadget() {
     const offset = -30;
     if (!this.$floatGadget.classList.contains("expand")) {
+      this.removeBlur();
       this.setMask("2px");
       this.$floatGadget.style.top = "50%";
       this.$floatGadget.style.left = "50%";
